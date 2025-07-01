@@ -1,0 +1,119 @@
+[gd_resource type="Theme" load_steps=17 format=3 uid="uid://byac21itgdgs7"]
+
+[ext_resource type="Texture2D" uid="uid://bhsejyocw3yfj" path="res://addons/debug_console/assets/sprites/icons/close.svg" id="1_m6p7v"]
+[ext_resource type="Texture2D" uid="uid://dhy0j2jxyesoy" path="res://addons/debug_console/assets/sprites/icons/close_pressed.svg" id="2_wf51c"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_ed4hv"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_t0o26"]
+bg_color = Color(0.7, 0.7, 0.7, 0.0588235)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.501961, 0.501961, 0.501961, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8yr7a"]
+content_margin_left = 6.0
+content_margin_right = 6.0
+draw_center = false
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.501961, 0.501961, 0.501961, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_vgq0f"]
+bg_color = Color(0.8, 0.8, 0.8, 0.0980392)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.501961, 0.501961, 0.501961, 1)
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_a7g52"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_afojx"]
+content_margin_left = 6.0
+content_margin_right = 6.0
+bg_color = Color(0.12, 0.12, 0.12, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_bottom = 1
+border_color = Color(0.5, 0.5, 0.5, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_5v1oc"]
+bg_color = Color(0.15, 0.15, 0.15, 1)
+border_width_top = 1
+border_color = Color(0.3, 0.3, 0.3, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_rojhd"]
+content_margin_left = 6.0
+content_margin_top = 6.0
+content_margin_right = 6.0
+content_margin_bottom = 6.0
+bg_color = Color(0.12, 0.12, 0.12, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_color = Color(0.5, 0.5, 0.5, 1)
+
+[sub_resource type="ImageTexture" id="ImageTexture_5p4qu"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_l0qq3"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_qrukh"]
+bg_color = Color(0.7, 0.7, 0.7, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hinxa"]
+bg_color = Color(0.8, 0.8, 0.8, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_5mllr"]
+content_margin_left = 4.0
+content_margin_top = 0.0
+content_margin_right = 4.0
+content_margin_bottom = 0.0
+draw_center = false
+border_width_left = 1
+border_color = Color(0.5, 0.5, 0.5, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_qdrks"]
+bg_color = Color(0.15, 0.15, 0.15, 1)
+border_color = Color(1, 1, 1, 1)
+expand_margin_left = 3.0
+expand_margin_top = 22.0
+expand_margin_right = 3.0
+expand_margin_bottom = 3.0
+
+[resource]
+Button/font_sizes/font_size = 12
+Button/styles/focus = SubResource("StyleBoxEmpty_ed4hv")
+Button/styles/hover = SubResource("StyleBoxFlat_t0o26")
+Button/styles/normal = SubResource("StyleBoxFlat_8yr7a")
+Button/styles/pressed = SubResource("StyleBoxFlat_vgq0f")
+LineEdit/font_sizes/font_size = 12
+LineEdit/styles/focus = SubResource("StyleBoxEmpty_a7g52")
+LineEdit/styles/normal = SubResource("StyleBoxFlat_afojx")
+Panel/styles/panel = SubResource("StyleBoxFlat_5v1oc")
+RichTextLabel/colors/default_color = Color(0.501961, 0.501961, 0.501961, 1)
+RichTextLabel/font_sizes/bold_font_size = 12
+RichTextLabel/font_sizes/bold_italics_font_size = 12
+RichTextLabel/font_sizes/italics_font_size = 12
+RichTextLabel/font_sizes/mono_font_size = 12
+RichTextLabel/font_sizes/normal_font_size = 12
+RichTextLabel/styles/normal = SubResource("StyleBoxFlat_rojhd")
+SpinBox/icons/updown = SubResource("ImageTexture_5p4qu")
+VScrollBar/styles/grabber = SubResource("StyleBoxFlat_l0qq3")
+VScrollBar/styles/grabber_highlight = SubResource("StyleBoxFlat_qrukh")
+VScrollBar/styles/grabber_pressed = SubResource("StyleBoxFlat_hinxa")
+VScrollBar/styles/scroll = SubResource("StyleBoxFlat_5mllr")
+Window/colors/title_color = Color(0.875, 0.875, 0.875, 1)
+Window/constants/close_h_offset = 17
+Window/constants/close_v_offset = 19
+Window/constants/resize_margin = 8
+Window/constants/title_height = 22
+Window/font_sizes/title_font_size = 12
+Window/icons/close = ExtResource("1_m6p7v")
+Window/icons/close_pressed = ExtResource("2_wf51c")
+Window/styles/embedded_border = SubResource("StyleBoxFlat_qdrks")
+Window/styles/embedded_unfocused_border = SubResource("StyleBoxFlat_qdrks")

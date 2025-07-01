@@ -1,0 +1,57 @@
+[gd_scene load_steps=3 format=3 uid="uid://cptj8gk2xleig"]
+
+[ext_resource type="Theme" uid="uid://byac21itgdgs7" path="res://addons/debug_console/resources/themes/debug_console_theme.tres" id="1_ck0rl"]
+[ext_resource type="Script" uid="uid://doyev61jbgfnv" path="res://addons/debug_console/scripts/debug_console.gd" id="3_5ru4j"]
+
+[node name="DebugConsole" type="Window"]
+process_mode = 3
+disable_3d = true
+title = "Console"
+position = Vector2i(11, 29)
+size = Vector2i(320, 256)
+min_size = Vector2i(256, 192)
+theme = ExtResource("1_ck0rl")
+script = ExtResource("3_5ru4j")
+
+[node name="Background" type="Panel" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MarginsContainer" type="MarginContainer" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 6
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 6
+theme_override_constants/margin_bottom = 6
+
+[node name="Layout" type="VBoxContainer" parent="MarginsContainer"]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="RichTextLabel" type="RichTextLabel" parent="MarginsContainer/Layout"]
+layout_mode = 2
+size_flags_vertical = 3
+scroll_following = true
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginsContainer/Layout"]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="LineEdit" type="LineEdit" parent="MarginsContainer/Layout/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+keep_editing_on_text_submit = true
+context_menu_enabled = false
+caret_blink = true
+caret_blink_interval = 0.15
+
+[node name="SubmitButton" type="Button" parent="MarginsContainer/Layout/HBoxContainer"]
+layout_mode = 2
+text = "Submit"
