@@ -1,11 +1,11 @@
 # godot-debug_console
 
-A simple debug console contained in a Godot plugin for ease of reuse across projects. Partly inspired by [jitspoe's godot-console](https://github.com/jitspoe/godot-console).
+A simple debug console packaged in a Godot plugin for easier reuse across projects. Implementation is partly inspired by [jitspoe's godot-console](https://github.com/jitspoe/godot-console).
 
 ## Features
 
 - Console commands can be added from within any class in your project that extends some kind of Node.
-- Allows for simpler logging without constant switching between your game's window and the editors window.
+- Allows for simpler logging without constant switching between your game's window and the editor's window.
 - Keeps track of command history.
 - Requires minimal setup, which is done automatically upon enabling the plugin.
 
@@ -18,15 +18,15 @@ A simple debug console contained in a Godot plugin for ease of reuse across proj
 
 ## Installation
 
-Download the latest [release](https://github.com/snddude/godot-debug_console/releases/latest) of the plugin (comes in a zip archive) and extract it into your project's "addons/" folder. After that, go to Project -> Project Settings -> Plugins and enable "godot-debug_console".
+Download the [latest release](https://github.com/snddude/godot-debug_console/releases/latest) of the plugin (comes in a zip archive) and extract it into your project's "addons/" folder. After that, go to Project -> Project Settings -> Plugins and enable "godot-debug_console".
 
 ## Usage
 
 The way you add a console command is as follows:
 
-```gdscript
+```
 DebugConsole.add_console_command("command_name", command_callable, command_argument_type)
-                                       ↑                ↑                    ↑
+                                       ^                ^                    ^
                          what you type into the console |                    |
                                                         |                    |
                                            the function that gets called     |
@@ -36,16 +36,17 @@ DebugConsole.add_console_command("command_name", command_callable, command_argum
 
 Logging is done this way:
 
-```gdscript
+```
 DebugConsole.print_line("some message", print_type)
-                              ↑             ↑
+                              ^             ^
                     the message that gets   |
                    displayed in the console |
                                             |
-                                 display formatting option
+                             message display formatting option
 ```
 
 ### Examples:
+
 Adding a console command with no argument:
 
 ```gdscript
@@ -96,4 +97,4 @@ func _ready() -> void:
 
 ## License
 
-This plugin is distributed under the [MIT](https://choosealicense.com/licenses/mit/) licence.
+This plugin is distributed under the [MIT License](https://en.wikipedia.org/wiki/MIT_License).
