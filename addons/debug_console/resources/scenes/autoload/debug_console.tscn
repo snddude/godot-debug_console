@@ -52,6 +52,6 @@ context_menu_enabled = false
 caret_blink = true
 caret_blink_interval = 0.15
 
-[node name="SubmitButton" type="Button" parent="MarginsContainer/Layout/HBoxContainer"]
+[node name="Button" type="Button" parent="MarginsContainer/Layout/HBoxContainer"]
 layout_mode = 2
 text = "Submit"

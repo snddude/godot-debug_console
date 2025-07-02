@@ -1,7 +1,7 @@
-[gd_resource type="Theme" load_steps=17 format=3 uid="uid://byac21itgdgs7"]
+[gd_resource type="Theme" load_steps=16 format=3 uid="uid://byac21itgdgs7"]
 
-[ext_resource type="Texture2D" uid="uid://bhsejyocw3yfj" path="res://addons/debug_console/assets/sprites/icons/close.svg" id="1_m6p7v"]
-[ext_resource type="Texture2D" uid="uid://dhy0j2jxyesoy" path="res://addons/debug_console/assets/sprites/icons/close_pressed.svg" id="2_wf51c"]
+[ext_resource type="Texture2D" uid="uid://j85gm506xlk2" path="res://addons/debug_console/assets/sprites/icons/close.svg" id="1_m6p7v"]
+[ext_resource type="Texture2D" uid="uid://b5qyrvp0o4r0k" path="res://addons/debug_console/assets/sprites/icons/close_pressed.svg" id="2_wf51c"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_ed4hv"]
 
@@ -58,8 +58,6 @@ border_width_top = 1
 border_width_right = 1
 border_color = Color(0.5, 0.5, 0.5, 1)
 
-[sub_resource type="ImageTexture" id="ImageTexture_5p4qu"]
-
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_l0qq3"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_qrukh"]
@@ -102,7 +100,6 @@ RichTextLabel/font_sizes/italics_font_size = 12
 RichTextLabel/font_sizes/mono_font_size = 12
 RichTextLabel/font_sizes/normal_font_size = 12
 RichTextLabel/styles/normal = SubResource("StyleBoxFlat_rojhd")
-SpinBox/icons/updown = SubResource("ImageTexture_5p4qu")
 VScrollBar/styles/grabber = SubResource("StyleBoxFlat_l0qq3")
 VScrollBar/styles/grabber_highlight = SubResource("StyleBoxFlat_qrukh")
 VScrollBar/styles/grabber_pressed = SubResource("StyleBoxFlat_hinxa")
