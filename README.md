@@ -18,7 +18,7 @@ A simple debug console packaged in a Godot plugin for easier reuse across projec
 
 ## Installation
 
-Download the [latest release](https://github.com/snddude/godot-debug_console/releases/latest) of the plugin (comes in a zip archive) and extract it into your project's "addons/" folder. After that, go to Project -> Project Settings -> Plugins and enable "godot-debug_console".
+Download the [latest release](https://github.com/snddude/godot-debug_console/releases/latest) of the plugin (comes in a zip archive) and extract it into your project's "addons/" folder. After that, go to Project -> Project Settings -> Plugins and enable "Debug Console".
 
 ## Usage
 
