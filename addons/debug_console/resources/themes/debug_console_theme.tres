@@ -1,7 +1,7 @@
 [gd_resource type="Theme" load_steps=16 format=3 uid="uid://byac21itgdgs7"]
 
-[ext_resource type="Texture2D" uid="uid://j85gm506xlk2" path="res://addons/debug_console/assets/sprites/icons/close.svg" id="1_m6p7v"]
-[ext_resource type="Texture2D" uid="uid://b5qyrvp0o4r0k" path="res://addons/debug_console/assets/sprites/icons/close_pressed.svg" id="2_wf51c"]
+[ext_resource type="Texture2D" uid="uid://crmql7kn5ebvf" path="res://addons/debug_console/assets/sprites/icons/close.svg" id="1_wf51c"]
+[ext_resource type="Texture2D" uid="uid://bda75qa4sqwri" path="res://addons/debug_console/assets/sprites/icons/close_pressed.svg" id="2_gbt5f"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_ed4hv"]
 
@@ -110,7 +110,7 @@ Window/constants/close_v_offset = 19
 Window/constants/resize_margin = 8
 Window/constants/title_height = 22
 Window/font_sizes/title_font_size = 12
-Window/icons/close = ExtResource("1_m6p7v")
-Window/icons/close_pressed = ExtResource("2_wf51c")
+Window/icons/close = ExtResource("1_wf51c")
+Window/icons/close_pressed = ExtResource("2_gbt5f")
 Window/styles/embedded_border = SubResource("StyleBoxFlat_qdrks")
 Window/styles/embedded_unfocused_border = SubResource("StyleBoxFlat_qdrks")

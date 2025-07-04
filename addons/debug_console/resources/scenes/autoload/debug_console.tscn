@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://cptj8gk2xleig"]
 
 [ext_resource type="Theme" uid="uid://byac21itgdgs7" path="res://addons/debug_console/resources/themes/debug_console_theme.tres" id="1_ck0rl"]
-[ext_resource type="Script" uid="uid://doyev61jbgfnv" path="res://addons/debug_console/scripts/debug_console.gd" id="3_5ru4j"]
+[ext_resource type="Script" uid="uid://cxn6p17vg5sph" path="res://addons/debug_console/scripts/debug_console.gd" id="3_5ru4j"]
 
 [node name="DebugConsole" type="Window"]
 process_mode = 3
