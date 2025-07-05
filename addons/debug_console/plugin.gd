@@ -27,7 +27,7 @@ func _enter_tree() -> void:
 
 		dialog.set_text(
 				"The following Actions are required by the Debug Console plugin to function "
-				+ "properly and have therefore been added to the Input Map of your Project:\n    "
+				+ "properly and have therefore been added to the Input Map of your project:\n    "
 				+ "- toggle_debug_console: QuoteLeft (`)\n\nThese Actions will not appear in the "
 				+ "Input Map tab until another Action is added or the project is reloaded.")
 		dialog.ok_button_text = "Save and Reload Project"
