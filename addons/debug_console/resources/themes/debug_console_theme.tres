@@ -1,4 +1,4 @@
-[gd_resource type="Theme" load_steps=16 format=3 uid="uid://byac21itgdgs7"]
+[gd_resource type="Theme" load_steps=17 format=3 uid="uid://byac21itgdgs7"]
 
 [ext_resource type="Texture2D" uid="uid://crmql7kn5ebvf" path="res://addons/debug_console/assets/sprites/icons/close.svg" id="1_wf51c"]
 [ext_resource type="Texture2D" uid="uid://bda75qa4sqwri" path="res://addons/debug_console/assets/sprites/icons/close_pressed.svg" id="2_gbt5f"]
@@ -47,6 +47,8 @@ bg_color = Color(0.15, 0.15, 0.15, 1)
 border_width_top = 1
 border_color = Color(0.3, 0.3, 0.3, 1)
 
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_wf51c"]
+
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_rojhd"]
 content_margin_left = 6.0
 content_margin_top = 6.0
@@ -89,16 +91,20 @@ Button/styles/focus = SubResource("StyleBoxEmpty_ed4hv")
 Button/styles/hover = SubResource("StyleBoxFlat_t0o26")
 Button/styles/normal = SubResource("StyleBoxFlat_8yr7a")
 Button/styles/pressed = SubResource("StyleBoxFlat_vgq0f")
+LineEdit/colors/selection_color = Color(0.25098, 0.501961, 0.705882, 0.501961)
 LineEdit/font_sizes/font_size = 12
 LineEdit/styles/focus = SubResource("StyleBoxEmpty_a7g52")
 LineEdit/styles/normal = SubResource("StyleBoxFlat_afojx")
 Panel/styles/panel = SubResource("StyleBoxFlat_5v1oc")
 RichTextLabel/colors/default_color = Color(0.501961, 0.501961, 0.501961, 1)
+RichTextLabel/colors/font_selected_color = Color(1, 1, 1, 1)
+RichTextLabel/colors/selection_color = Color(0.25098, 0.501961, 0.705882, 0.501961)
 RichTextLabel/font_sizes/bold_font_size = 12
 RichTextLabel/font_sizes/bold_italics_font_size = 12
 RichTextLabel/font_sizes/italics_font_size = 12
 RichTextLabel/font_sizes/mono_font_size = 12
 RichTextLabel/font_sizes/normal_font_size = 12
+RichTextLabel/styles/focus = SubResource("StyleBoxEmpty_wf51c")
 RichTextLabel/styles/normal = SubResource("StyleBoxFlat_rojhd")
 VScrollBar/styles/grabber = SubResource("StyleBoxFlat_l0qq3")
 VScrollBar/styles/grabber_highlight = SubResource("StyleBoxFlat_qrukh")

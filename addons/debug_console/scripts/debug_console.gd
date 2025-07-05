@@ -35,12 +35,16 @@ func _ready() -> void:
 	focus_exited.connect(hide_console)
 	close_requested.connect(hide_console)
 	button.pressed.connect(parse_input_text)
+	button.pressed.connect(line_edit.grab_focus)
 	line_edit.text_submitted.connect(parse_input_text)
 
 
 func _input(event: InputEvent) -> void:
 	if event is not InputEventKey:
 		return
+
+	if event.is_action_pressed("ui_cancel"):
+		hide_console()
 
 	var changed_history_index: bool = false
 	if event.is_action_pressed("ui_up"):
