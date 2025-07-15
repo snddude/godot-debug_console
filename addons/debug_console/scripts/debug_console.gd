@@ -97,6 +97,25 @@ func add_console_command(command_text: String, callable: Callable, argument_type
 	commands[command_text] = new_command
 
 
+func print_line(message: String, print_type: int) -> void:
+	var text: String = ""
+
+	match print_type:
+		PRINT_TYPE_LINE:
+			text = "> " + message + "\n"
+		PRINT_TYPE_OUTPUT:
+			text = "\t" + message + "\n"
+		PRINT_TYPE_DEBUG:
+			text = get_timestamp() + message + "\n"
+		PRINT_TYPE_WARNING:
+			text = get_timestamp() + "[color=yellow]WARNING:[/color] " + message + "\n"
+		PRINT_TYPE_ERROR:
+			text = get_timestamp() + "[color=red]ERROR:[/color] " + message + "\n"
+
+	label.append_text(text)
+	label.scroll_to_line(label.get_line_count())
+
+
 func clear_command_list() -> void:
 	commands = {}
 	commands.merge(essentials)
@@ -142,24 +161,6 @@ func parse_input_text(_discard: String = "") -> void:
 
 func get_timestamp() -> String:
 	return "[ %s ] "%Time.get_time_string_from_system()
-
-
-func print_line(message: String, print_type: int) -> void:
-	var text: String = ""
-
-	match print_type:
-		PRINT_TYPE_LINE:
-			text = "> " + message + "\n"
-		PRINT_TYPE_OUTPUT:
-			text = "\t" + message + "\n"
-		PRINT_TYPE_DEBUG:
-			text = get_timestamp() + message + "\n"
-		PRINT_TYPE_WARNING:
-			text = get_timestamp() + "[color=yellow]WARNING:[/color] " + message + "\n"
-		PRINT_TYPE_ERROR:
-			text = get_timestamp() + "[color=red]ERROR:[/color] " + message + "\n"
-
-	label.append_text(text)
 
 
 func increment_history_index(ammount: int) -> void:
