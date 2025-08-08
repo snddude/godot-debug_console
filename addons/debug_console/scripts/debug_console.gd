@@ -112,15 +112,15 @@ func print_line(message: String, print_type: int) -> void:
 
 	match print_type:
 		PRINT_TYPE_LINE:
-			text = "> " + message + "\n"
+			text = "> %s\n"%message
 		PRINT_TYPE_OUTPUT:
-			text = "\t" + message + "\n"
+			text = "\t%s\n"%message
 		PRINT_TYPE_DEBUG:
 			text = get_timestamp() + message + "\n"
 		PRINT_TYPE_WARNING:
-			text = get_timestamp() + "[color=yellow]WARNING:[/color] " + message + "\n"
+			text = "%s[color=yellow]WARNING:[/color] %s\n"%[get_timestamp(), message]
 		PRINT_TYPE_ERROR:
-			text = get_timestamp() + "[color=red]ERROR:[/color] " + message + "\n"
+			text = "%s[color=red]ERROR:[/color] %s\n"%[get_timestamp(), message]
 
 	label.append_text(text)
 	label.scroll_to_line(label.get_line_count())
