@@ -38,6 +38,12 @@ func _ready() -> void:
 	button.pressed.connect(line_edit.grab_focus)
 	line_edit.text_submitted.connect(parse_input_text)
 
+	add_console_command("help", help, TYPE_NIL)
+	add_console_command("exec", execute, TYPE_NIL)
+	add_console_command("history", history, TYPE_NIL)
+	add_console_command("clear", clear, TYPE_NIL)
+	add_console_command("exit", exit, TYPE_NIL)
+
 
 func _input(event: InputEvent) -> void:
 	if event is not InputEventKey:
@@ -97,6 +103,10 @@ func add_console_command(command_text: String, callable: Callable, argument_type
 	commands[command_text] = new_command
 
 
+func remove_console_command(command_text: String) -> void:
+	commands.erase(command_text)
+
+
 func print_line(message: String, print_type: int) -> void:
 	var text: String = ""
 
@@ -114,11 +124,6 @@ func print_line(message: String, print_type: int) -> void:
 
 	label.append_text(text)
 	label.scroll_to_line(label.get_line_count())
-
-
-func clear_command_list() -> void:
-	commands = {}
-	commands.merge(essentials)
 
 
 func parse_input_text(_discard: String = "") -> void:

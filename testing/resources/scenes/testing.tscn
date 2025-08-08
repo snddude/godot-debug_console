@@ -1,3 +1,182 @@
-[gd_scene format=3 uid="uid://bh31wbnlco67n"]
+[gd_scene load_steps=13 format=3 uid="uid://bh31wbnlco67n"]
 
-[node name="Main" type="Node"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ediug"]
+content_margin_left = 4.0
+content_margin_right = 4.0
+bg_color = Color(0, 0, 0, 0.498039)
+
+[sub_resource type="Theme" id="Theme_v3hh1"]
+Label/font_sizes/font_size = 12
+Label/styles/normal = SubResource("StyleBoxFlat_ediug")
+
+[sub_resource type="GDScript" id="GDScript_ediug"]
+resource_name = "fps_label"
+script/source = "extends Label
+
+
+func _enter_tree() -> void:
+	hide()
+	DebugConsole.add_console_command(\"show_fps\", show_fps, TYPE_NIL)
+
+
+func _process(_delta: float) -> void:
+	if not visible:
+		return
+
+	text = \"%d FPS\"%Engine.get_frames_per_second()
+
+
+func _exit_tree() -> void:
+	DebugConsole.remove_console_command(\"show_fps\")
+
+
+func show_fps() -> void:
+	visible = not visible
+"
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_ediug"]
+sky_horizon_color = Color(0.662243, 0.671743, 0.686743, 1)
+ground_horizon_color = Color(0.662243, 0.671743, 0.686743, 1)
+
+[sub_resource type="Sky" id="Sky_v3hh1"]
+sky_material = SubResource("ProceduralSkyMaterial_ediug")
+
+[sub_resource type="Environment" id="Environment_0ream"]
+background_mode = 2
+sky = SubResource("Sky_v3hh1")
+tonemap_mode = 2
+glow_enabled = true
+
+[sub_resource type="GDScript" id="GDScript_v3hh1"]
+resource_name = "camera_3d"
+script/source = "extends Camera3D
+
+
+func _enter_tree() -> void:
+	DebugConsole.add_console_command(\"unshaded\", unshaded, TYPE_NIL)
+	DebugConsole.add_console_command(\"wireframe\", wireframe, TYPE_NIL)
+	DebugConsole.add_console_command(\"overdraw\", overdraw, TYPE_NIL)
+
+
+func _exit_tree() -> void:
+	DebugConsole.remove_console_command(\"unshaded\")
+	DebugConsole.remove_console_command(\"wireframe\")
+	DebugConsole.remove_console_command(\"overdraw\")
+
+
+func unshaded() -> void:
+	if get_viewport().debug_draw == Viewport.DEBUG_DRAW_DISABLED:
+		get_viewport().debug_draw = Viewport.DEBUG_DRAW_UNSHADED
+		return
+
+	get_viewport().debug_draw = Viewport.DEBUG_DRAW_DISABLED
+
+
+func wireframe() -> void:
+	if get_viewport().debug_draw == Viewport.DEBUG_DRAW_DISABLED:
+		get_viewport().debug_draw = Viewport.DEBUG_DRAW_WIREFRAME
+		return
+
+	get_viewport().debug_draw = Viewport.DEBUG_DRAW_DISABLED
+
+
+func overdraw() -> void:
+	if get_viewport().debug_draw == Viewport.DEBUG_DRAW_DISABLED:
+		get_viewport().debug_draw = Viewport.DEBUG_DRAW_OVERDRAW
+		return
+
+	get_viewport().debug_draw = Viewport.DEBUG_DRAW_DISABLED
+"
+
+[sub_resource type="BoxMesh" id="BoxMesh_ediug"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_v3hh1"]
+
+[sub_resource type="Animation" id="Animation_0ream"]
+resource_name = "spin"
+length = 5.0
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 5),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector3(0, 0, 0), Vector3(0, 6.28319, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_h82n0"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, 0, 0)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_b0bm8"]
+_data = {
+&"RESET": SubResource("Animation_h82n0"),
+&"spin": SubResource("Animation_0ream")
+}
+
+[node name="Testing" type="Node"]
+
+[node name="Debug" type="CanvasLayer" parent="."]
+
+[node name="Control" type="Control" parent="Debug"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = SubResource("Theme_v3hh1")
+
+[node name="FPSLabel" type="Label" parent="Debug/Control"]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 4.0
+offset_top = -21.0
+offset_right = 63.0
+offset_bottom = -4.0
+grow_vertical = 0
+text = "0000 FPS"
+script = SubResource("GDScript_ediug")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(-0.866023, -0.433016, 0.250001, 0, 0.499998, 0.866027, -0.500003, 0.749999, -0.43301, 0, 0, 0)
+shadow_enabled = true
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_0ream")
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.819152, 0.573576, 0, -0.573576, 0.819152, 0, 2, 3)
+script = SubResource("GDScript_v3hh1")
+
+[node name="AnimatableBody3D" type="AnimatableBody3D" parent="."]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="AnimatableBody3D"]
+mesh = SubResource("BoxMesh_ediug")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="AnimatableBody3D"]
+shape = SubResource("BoxShape3D_v3hh1")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="AnimatableBody3D"]
+libraries = {
+&"": SubResource("AnimationLibrary_b0bm8")
+}
+autoplay = "spin"

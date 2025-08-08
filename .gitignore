@@ -16,4 +16,5 @@ data_*/
 mono_crash.*.json
 
 # Custom ignores
-
+addons/inspector_tabs
+addons/script-tabs
