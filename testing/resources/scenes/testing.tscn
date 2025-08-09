@@ -1,4 +1,21 @@
-[gd_scene load_steps=13 format=3 uid="uid://bh31wbnlco67n"]
+[gd_scene load_steps=14 format=3 uid="uid://bh31wbnlco67n"]
+
+[sub_resource type="GDScript" id="GDScript_0ream"]
+resource_name = "testing"
+script/source = "extends Node
+
+
+func _enter_tree() -> void:
+	DebugConsole.add_console_command(\"pause\", _toggle_pause, TYPE_NIL)
+
+
+func _exit_tree() -> void:
+	DebugConsole.remove_console_command(\"pause\")
+
+
+func _toggle_pause() -> void:
+	get_tree().paused = not get_tree().paused
+"
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ediug"]
 content_margin_left = 4.0
@@ -131,6 +148,7 @@ _data = {
 }
 
 [node name="Testing" type="Node"]
+script = SubResource("GDScript_0ream")
 
 [node name="Debug" type="CanvasLayer" parent="."]
 
