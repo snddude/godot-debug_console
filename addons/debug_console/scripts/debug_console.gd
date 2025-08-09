@@ -1,48 +1,42 @@
-@icon("res://addons/debug_console/assets/sprites/icons/debug_console.svg")
 extends Window
 
 signal shown
 signal hidden
 
-const PRINT_TYPE_LINE: int = 0
-const PRINT_TYPE_OUTPUT: int = 1
-const PRINT_TYPE_DEBUG: int = 2
-const PRINT_TYPE_WARNING: int = 3
-const PRINT_TYPE_ERROR: int = 4
+enum PrintType {}
 
-var current_history_index: int = -1
-var can_show: bool = true
-var essentials: Dictionary[String, DebugConsoleCommand] = {
-	"help": DebugConsoleCommand.new("help", help, TYPE_NIL),
-	"exec": DebugConsoleCommand.new("exec", execute, TYPE_STRING),
-	"history": DebugConsoleCommand.new("history", history, TYPE_NIL),
-	"clear": DebugConsoleCommand.new("clear", clear, TYPE_NIL),
-	"exit": DebugConsoleCommand.new("exit", exit, TYPE_NIL),
-}
-var commands: Dictionary[String, DebugConsoleCommand] = {}
-var command_history: Array[String] = [""]
+const PRINT_TYPE_LINE: PrintType = 0
+const PRINT_TYPE_OUTPUT: PrintType = 1
+const PRINT_TYPE_DEBUG: PrintType = 2
+const PRINT_TYPE_WARNING: PrintType = 3
+const PRINT_TYPE_ERROR: PrintType = 4
 
-@onready var label: RichTextLabel = $MarginsContainer/Layout/RichTextLabel
-@onready var line_edit: LineEdit = $MarginsContainer/Layout/HBoxContainer/LineEdit
-@onready var button: Button = $MarginsContainer/Layout/HBoxContainer/Button
+@export_group("Nodes")
+@export var _rich_text_label: RichTextLabel
+@export var _line_edit: LineEdit
+@export var _button: Button
+
+var _current_history_index: int = -1
+var _can_show: bool = true
+var _commands: Dictionary[String, DebugConsoleCommand] = {}
+var _command_history: Array[String] = [""]
 
 
 func _ready() -> void:
-	commands.merge(essentials)
+	_hide_console()
 
-	hide_console()
+	_button.pressed.connect(_parse_input_text)
+	_button.pressed.connect(_line_edit.grab_focus)
+	_line_edit.text_submitted.connect(_parse_input_text)
 
-	focus_exited.connect(hide_console)
-	close_requested.connect(hide_console)
-	button.pressed.connect(parse_input_text)
-	button.pressed.connect(line_edit.grab_focus)
-	line_edit.text_submitted.connect(parse_input_text)
+	focus_exited.connect(_hide_console)
+	close_requested.connect(_hide_console)
 
-	add_console_command("help", help, TYPE_NIL)
-	add_console_command("exec", execute, TYPE_NIL)
-	add_console_command("history", history, TYPE_NIL)
-	add_console_command("clear", clear, TYPE_NIL)
-	add_console_command("exit", exit, TYPE_NIL)
+	add_console_command("help", _help, TYPE_NIL)
+	add_console_command("exec", _exec, TYPE_STRING)
+	add_console_command("history", _history, TYPE_NIL)
+	add_console_command("clear", _clear, TYPE_NIL)
+	add_console_command("exit", _exit, TYPE_NIL)
 
 
 func _input(event: InputEvent) -> void:
@@ -50,64 +44,41 @@ func _input(event: InputEvent) -> void:
 		return
 
 	if event.is_action_pressed("ui_cancel"):
-		hide_console()
+		_hide_console()
 
 	var changed_history_index: bool = false
+
 	if event.is_action_pressed("ui_up"):
-		increment_history_index(1)
+		_increment_history_index(1)
 		changed_history_index = true
 	elif event.is_action_pressed("ui_down"):
-		increment_history_index(-1)
+		_increment_history_index(-1)
 		changed_history_index = true
 
 	if changed_history_index:
-		line_edit.text = get_command_from_history()
-		line_edit.accept_event()
-		line_edit.caret_column = line_edit.text.length()
+		_line_edit.text = _get_command_from_history()
+		_line_edit.accept_event()
+		_line_edit.caret_column = _line_edit.text.length()
 
 
 func _process(_delta: float) -> void:
-	if can_show and Input.is_action_just_pressed("toggle_debug_console"):
-		hide_console() if visible else show_console()
-
-
-func allow_show() -> void:
-	can_show = true
-
-
-func disallow_show() -> void:
-	can_show = false
-
-	if visible:
-		hide_console()
-
-
-func show_console() -> void:
-	show()
-	line_edit.grab_focus()
-	shown.emit()
-
-
-func hide_console() -> void:
-	hide()
-	line_edit.clear()
-	hidden.emit()
+	if _can_show and Input.is_action_just_pressed("toggle_debug_console"):
+		_hide_console() if visible else _show_console()
 
 
 func add_console_command(command_text: String, callable: Callable, argument_type: int) -> void:
-	if commands.has(command_text):
-		commands[command_text].callable = callable
+	if _commands.has(command_text):
+		_commands[command_text].callable = callable
 		return
 
-	var new_command := DebugConsoleCommand.new(command_text, callable, argument_type)
-	commands[command_text] = new_command
+	_commands[command_text] = DebugConsoleCommand.new(command_text, callable, argument_type)
 
 
 func remove_console_command(command_text: String) -> void:
-	commands.erase(command_text)
+	_commands.erase(command_text)
 
 
-func print_line(message: String, print_type: int) -> void:
+func print_line(message: String, print_type: PrintType) -> void:
 	var text: String = ""
 
 	match print_type:
@@ -116,82 +87,115 @@ func print_line(message: String, print_type: int) -> void:
 		PRINT_TYPE_OUTPUT:
 			text = "\t%s\n"%message
 		PRINT_TYPE_DEBUG:
-			text = get_timestamp() + message + "\n"
+			text = "%s%s\n"%[_get_timestamp(), message]
 		PRINT_TYPE_WARNING:
-			text = "%s[color=yellow]WARNING:[/color] %s\n"%[get_timestamp(), message]
+			text = "%s[color=yellow]WARNING:[/color] %s\n"%[_get_timestamp(), message]
 		PRINT_TYPE_ERROR:
-			text = "%s[color=red]ERROR:[/color] %s\n"%[get_timestamp(), message]
+			text = "%s[color=red]ERROR:[/color] %s\n"%[_get_timestamp(), message]
 
-	label.append_text(text)
-	label.scroll_to_line(label.get_line_count())
+	_rich_text_label.append_text(text)
+	_rich_text_label.scroll_to_line(_rich_text_label.get_line_count())
 
 
-func parse_input_text(_discard: String = "") -> void:
-	var text: String = line_edit.text
-	line_edit.clear()
+func _allow_show() -> void:
+	_can_show = true
 
-	print_line(text, PRINT_TYPE_LINE)
 
-	var input: PackedStringArray = text.split(" ", false, 1)
-	if input.size() == 0:
+func _disallow_show() -> void:
+	_can_show = false
+
+	if visible:
+		_hide_console()
+
+
+func _show_console() -> void:
+	show()
+	_line_edit.grab_focus()
+
+	shown.emit()
+
+
+func _hide_console() -> void:
+	hide()
+	_line_edit.clear()
+
+	hidden.emit()
+
+
+func _parse_input_text(_discard: String = "") -> void:
+	var input_text: String = _line_edit.text
+
+	_line_edit.clear()
+	print_line(input_text, PRINT_TYPE_LINE)
+
+	if input_text.length() == 0:
 		return
 
-	command_history.insert(1, text)
-	current_history_index = 0
+	_command_history.insert(1, input_text)
+	_current_history_index = 0
 
-	var command_text: String = input[0]
-	if command_text not in commands.keys():
-		print_line('Invalid command "' + str(command_text) + '"', PRINT_TYPE_ERROR)
+	var input_text_split: PackedStringArray = input_text.split(" ", false, 1)
+	var command_text: String = input_text_split[0]
+
+	if command_text not in _commands.keys():
+		print_line('invalid command "%s"'%command_text, PRINT_TYPE_ERROR)
 		return
 
-	var command: DebugConsoleCommand = commands[command_text]
+	var command: DebugConsoleCommand = _commands[command_text]
+
 	if command.argument_type == TYPE_NIL:
+		if input_text_split.size() > 1:
+			print_line('command "%s" does not require an argument'%command_text, PRINT_TYPE_ERROR)
+			return
+
 		command.callable.call()
 		return
 
-	if input.size() == 1:
-		print_line('Command "' + command_text + '" requires an argument', PRINT_TYPE_ERROR)
+	if input_text_split.size() == 1:
+		print_line('command "%s" requires an argument'%command_text, PRINT_TYPE_ERROR)
 		return
 
-	var argument = input[1]
+	var argument: String = input_text_split[1]
+
 	if command.argument_type != TYPE_STRING:
 		argument = str_to_var(argument)
 
 	if typeof(argument) != command.argument_type:
-		print_line('Invalid argument type for command "' + command_text + '"', PRINT_TYPE_ERROR)
+		print_line('invalid argument type for command "%s"'%command_text, PRINT_TYPE_ERROR)
 		return
 
 	command.callable.call(argument)
 
 
-func get_timestamp() -> String:
+func _get_timestamp() -> String:
 	return "[ %s ] "%Time.get_time_string_from_system()
 
 
-func increment_history_index(ammount: int) -> void:
-	if command_history.size() == 0:
+func _increment_history_index(ammount: int) -> void:
+	if _command_history.size() == 0:
 		return
 
-	current_history_index += ammount
-	current_history_index = clamp(current_history_index, 0, command_history.size() - 1)
+	_current_history_index += ammount
+	_current_history_index = clamp(_current_history_index, 0, _command_history.size() - 1)
 
 
-func get_command_from_history() -> String:
-	if command_history.size() == 0:
+func _get_command_from_history() -> String:
+	if _command_history.size() == 0:
 		return ""
 
-	return command_history[current_history_index]
+	return _command_history[_current_history_index]
 
 
-func execute(text: String) -> void:
+func _exec(input_text: String) -> void:
 	var expression := Expression.new()
+	var error: Error = expression.parse(input_text)
 
-	var error: Error = expression.parse(text)
 	if error != OK:
 		print_line(expression.get_error_text(), PRINT_TYPE_ERROR)
 		return
 
 	var result: String = str(expression.execute([], self))
+
 	if expression.has_execute_failed():
 		print_line(expression.get_error_text(), PRINT_TYPE_ERROR)
 		return
@@ -199,26 +203,26 @@ func execute(text: String) -> void:
 	print_line(result, PRINT_TYPE_OUTPUT)
 
 
-func help() -> void:
+func _help() -> void:
 	print_line("Here's a list of all available commands:", PRINT_TYPE_OUTPUT)
 
-	var command_list: Array[String] = commands.keys()
+	var command_list: Array[String] = _commands.keys()
 	command_list.sort()
 
-	for command_text in command_list:
+	for command_text: String in command_list:
 		print_line("- " + command_text, PRINT_TYPE_OUTPUT)
 
 
-func history() -> void:
+func _history() -> void:
 	print_line("Command history for current session:", PRINT_TYPE_OUTPUT)
 
-	for i in range(command_history.size() - 1, 1, -1):
-		print_line("%d  "%(command_history.size()-i) + command_history[i], PRINT_TYPE_OUTPUT)
+	for i: int in range(_command_history.size() - 1, 1, -1):
+		print_line("%d  "%(_command_history.size()-i) + _command_history[i], PRINT_TYPE_OUTPUT)
 
 
-func clear() -> void:
-	label.clear()
+func _clear() -> void:
+	_rich_text_label.clear()
 
 
-func exit() -> void:
+func _exit() -> void:
 	get_tree().quit()

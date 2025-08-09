@@ -1,9 +1,9 @@
 [gd_scene load_steps=3 format=3 uid="uid://cptj8gk2xleig"]
 
-[ext_resource type="Theme" uid="uid://byac21itgdgs7" path="res://addons/debug_console/resources/themes/debug_console_theme.tres" id="1_ck0rl"]
+[ext_resource type="Theme" uid="uid://byac21itgdgs7" path="res://addons/debug_console/resources/debug_console_theme.tres" id="1_ck0rl"]
 [ext_resource type="Script" uid="uid://cxn6p17vg5sph" path="res://addons/debug_console/scripts/debug_console.gd" id="3_5ru4j"]
 
-[node name="DebugConsole" type="Window"]
+[node name="DebugConsole" type="Window" node_paths=PackedStringArray("_rich_text_label", "_line_edit", "_button")]
 process_mode = 3
 disable_3d = true
 title = "Console"
@@ -12,6 +12,9 @@ size = Vector2i(320, 256)
 min_size = Vector2i(256, 192)
 theme = ExtResource("1_ck0rl")
 script = ExtResource("3_5ru4j")
+_rich_text_label = NodePath("MarginsContainer/Layout/RichTextLabel")
+_line_edit = NodePath("MarginsContainer/Layout/HBoxContainer/LineEdit")
+_button = NodePath("MarginsContainer/Layout/HBoxContainer/Button")
 
 [node name="Background" type="Panel" parent="."]
 anchors_preset = 15
