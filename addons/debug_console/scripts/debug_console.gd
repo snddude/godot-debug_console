@@ -66,6 +66,17 @@ func _process(_delta: float) -> void:
 		_hide_console() if visible else _show_console()
 
 
+func allow_show() -> void:
+	_can_show = true
+
+
+func disallow_show() -> void:
+	_can_show = false
+
+	if visible:
+		_hide_console()
+
+
 func add_console_command(command_text: String, callable: Callable, argument_type: int) -> void:
 	if _commands.has(command_text):
 		_commands[command_text].callable = callable
@@ -95,17 +106,6 @@ func print_line(message: String, print_type: PrintType) -> void:
 
 	_rich_text_label.append_text(text)
 	_rich_text_label.scroll_to_line(_rich_text_label.get_line_count())
-
-
-func _allow_show() -> void:
-	_can_show = true
-
-
-func _disallow_show() -> void:
-	_can_show = false
-
-	if visible:
-		_hide_console()
 
 
 func _show_console() -> void:
@@ -155,7 +155,7 @@ func _parse_input_text(_discard: String = "") -> void:
 		print_line('command "%s" requires an argument'%command_text, PRINT_TYPE_ERROR)
 		return
 
-	var argument: String = input_text_split[1]
+	var argument: Variant = input_text_split[1]
 
 	if command.argument_type != TYPE_STRING:
 		argument = str_to_var(argument)
