@@ -20,13 +20,13 @@ DebugConsole.add_console_command(
 
 The "argument_type" argument uses the standard TYPE_NIL, TYPE_INT, TYPE_FLOAT values that are provided by Godot.
 
-**Note:** every command that gets added by a node should be removed when that node exits the scene tree. You do this by using the following function:
-
-```gdscript
-DebugConsole.remove_console_command(
-        command_text: String  # Same as the "command_text" argument in the add_console_command() function.
-)
-```
+> [!NOTE]
+> Every command that gets added by a node should be removed when that node exits the scene tree. You do this by using the following function:
+> ```gdscript
+> DebugConsole.remove_console_command(
+>         command_text: String  # Same as the "command_text" argument in the add_console_command() function.
+> )
+> ```
 
 To log a message to the console you do this:
 
