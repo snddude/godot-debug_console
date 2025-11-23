@@ -18,7 +18,7 @@ DebugConsole.add_console_command(
 )
 ```
 
-The "argument_type" argument uses the standard TYPE_NIL, TYPE_INT, TYPE_FLOAT values that are provided by Godot.
+The "argument_type" argument uses the standard TYPE_... values that are provided by Godot (for example: TYPE_NIL, TYPE_INT, TYPE_FLOAT, etc.)
 
 > [!NOTE]
 > Every command that gets added by a node should be removed when that node exits the scene tree. You do this by using the following function:
