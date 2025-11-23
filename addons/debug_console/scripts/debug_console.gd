@@ -77,12 +77,12 @@ func disallow_show() -> void:
 		_hide_console()
 
 
-func add_console_command(command_text: String, callable: Callable, argument_type: int) -> void:
-	if _commands.has(command_text):
-		_commands[command_text].callable = callable
+func add_console_command(command_name: String, callable: Callable, argument_type: int) -> void:
+	if _commands.has(command_name):
+		_commands[command_name].callable = callable
 		return
 
-	_commands[command_text] = DebugConsoleCommand.new(command_text, callable, argument_type)
+	_commands[command_name] = DebugConsoleCommand.new(command_name, callable, argument_type)
 
 
 func remove_console_command(command_text: String) -> void:
@@ -135,36 +135,38 @@ func _parse_input_text(_discard: String = "") -> void:
 	_current_history_index = 0
 
 	var input_text_split: PackedStringArray = input_text.split(" ", false, 1)
-	var command_text: String = input_text_split[0]
+	var command_name: String = input_text_split[0]
 
-	if command_text not in _commands.keys():
-		print_line('invalid command "%s"'%command_text, PRINT_TYPE_ERROR)
+	if command_name not in _commands.keys():
+		print_line('invalid command "%s"'%command_name, PRINT_TYPE_ERROR)
 		return
 
-	var command: DebugConsoleCommand = _commands[command_text]
+	var command: DebugConsoleCommand = _commands[command_name]
+	var command_argument_type: int = command.get_argument_type()
+	var command_callable: Callable = command.get_callable()
 
-	if command.argument_type == TYPE_NIL:
+	if command_argument_type == TYPE_NIL:
 		if input_text_split.size() > 1:
-			print_line('command "%s" does not require an argument'%command_text, PRINT_TYPE_ERROR)
+			print_line('command "%s" does not require an argument'%command_name, PRINT_TYPE_ERROR)
 			return
 
-		command.callable.call()
+		command_callable.call()
 		return
 
 	if input_text_split.size() == 1:
-		print_line('command "%s" requires an argument'%command_text, PRINT_TYPE_ERROR)
+		print_line('command "%s" requires an argument'%command_name, PRINT_TYPE_ERROR)
 		return
 
 	var argument: Variant = input_text_split[1]
 
-	if command.argument_type != TYPE_STRING:
+	if command_argument_type != TYPE_STRING:
 		argument = str_to_var(argument)
 
-	if typeof(argument) != command.argument_type:
-		print_line('invalid argument type for command "%s"'%command_text, PRINT_TYPE_ERROR)
+	if typeof(argument) != command_argument_type:
+		print_line('invalid argument type for command "%s"'%command_name, PRINT_TYPE_ERROR)
 		return
 
-	command.callable.call(argument)
+	command_callable.call(argument)
 
 
 func _get_timestamp() -> String:
@@ -226,3 +228,27 @@ func _clear() -> void:
 
 func _exit() -> void:
 	get_tree().quit()
+
+
+class DebugConsoleCommand extends RefCounted:
+	var _name: String
+	var _callable: Callable
+	var _argument_type: int
+
+
+	func _init(name: String, command_callable: Callable, command_argument_type: int) -> void:
+		_name = name
+		_callable = command_callable
+		_argument_type = command_argument_type
+
+
+	func get_name() -> String:
+		return _name
+
+
+	func get_callable() -> Callable:
+		return _callable
+
+
+	func get_argument_type() -> int:
+		return _argument_type
