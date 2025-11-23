@@ -12,7 +12,7 @@ config_version=5
 
 config/name="godot-debug_console"
 run/main_scene="uid://bh31wbnlco67n"
-config/features=PackedStringArray("4.4", "Forward Plus")
+config/features=PackedStringArray("4.5", "Forward Plus")
 config/icon="uid://djs4kpgpdtjlp"
 
 [autoload]
