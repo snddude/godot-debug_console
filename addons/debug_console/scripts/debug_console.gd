@@ -78,10 +78,6 @@ func disallow_show() -> void:
 
 
 func add_console_command(command_name: String, callable: Callable, argument_type: int) -> void:
-	if _commands.has(command_name):
-		_commands[command_name].callable = callable
-		return
-
 	_commands[command_name] = DebugConsoleCommand.new(command_name, callable, argument_type)
 
 
