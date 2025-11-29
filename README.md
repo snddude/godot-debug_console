@@ -12,7 +12,7 @@ The way you add a console command is as follows:
 
 ```gdscript
 DebugConsole.add_console_command(
-        command_text: String,  # The text that you type into the console to call the command.
+        command_name: String,  # The text that you type into the console to call the command.
         callable: Callable,    # The function that gets called.
         argument_type: int     # The variable type of the command's argument.
 )
