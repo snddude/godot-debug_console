@@ -24,7 +24,7 @@ The "argument_type" argument uses the standard TYPE_... values that are provided
 > Every command that gets added by a node should be removed when that node exits the scene tree. You do this by using the following function:
 > ```gdscript
 > DebugConsole.remove_console_command(
->         command_text: String  # Same as the "command_text" argument in the add_console_command() function.
+>         command_text: String  # Same as the "command_name" argument in the add_console_command() function.
 > )
 > ```
 
