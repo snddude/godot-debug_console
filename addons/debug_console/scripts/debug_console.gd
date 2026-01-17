@@ -5,6 +5,7 @@ signal hidden
 
 enum PrintType {}
 
+const PATH_CONVARS_FILE: String = "user://convars.file"
 const PRINT_TYPE_LINE: PrintType = 0
 const PRINT_TYPE_OUTPUT: PrintType = 1
 const PRINT_TYPE_DEBUG: PrintType = 2
@@ -18,8 +19,15 @@ const PRINT_TYPE_ERROR: PrintType = 4
 
 var _current_history_index: int = -1
 var _can_show: bool = true
-var _commands: Dictionary[String, DebugConsoleCommand] = {}
 var _command_history: Array[String] = [""]
+var _variables: Dictionary[String, Dictionary] = {}
+var _commands: Dictionary[String, DebugConsoleCommand] = {}
+
+
+func _enter_tree() -> void:
+	var file := FileAccess.open(PATH_CONVARS_FILE, FileAccess.READ)
+	if file:
+		_variables = file.get_var()
 
 
 func _ready() -> void:
@@ -75,6 +83,56 @@ func disallow_show() -> void:
 
 	if visible:
 		_hide_console()
+
+
+func add_variable(variable_name: String, value: Variant, persistent: bool) -> void:
+	if variable_name in _variables.keys():
+		if not persistent:
+			print_line(
+					'Trying to add duplicate console variable "%s"'%variable_name,
+					PRINT_TYPE_ERROR)
+		return
+
+	_variables[variable_name] = {"value": value, "persistent": persistent}
+
+	if persistent:
+		var file := FileAccess.open(PATH_CONVARS_FILE, FileAccess.WRITE)
+		file.store_var(_variables)
+
+
+func remove_variable(variable_name: String) -> void:
+	if variable_name not in _variables.keys():
+		print_line(
+				'Trying to remove nonexistent console variable "%s"'%variable_name,
+				PRINT_TYPE_ERROR)
+		return
+
+	_variables.erase(name)
+
+
+func get_variable_value(variable_name: String) -> Variant:
+	if variable_name not in _variables.keys():
+		print_line(
+				'Trying to get value of nonexistent console variable "%s"'%variable_name,
+				PRINT_TYPE_ERROR)
+		return null
+
+	return _variables[variable_name]["value"]
+
+
+func set_variable_value(variable_name: String, value: Variant) -> void:
+	if variable_name not in _variables.keys():
+		print_line(
+				'Trying to set value of nonexistent console variable "%s"'%variable_name,
+				PRINT_TYPE_ERROR)
+		return
+
+	var variable: Dictionary = _variables[variable_name]
+	variable["value"] = value
+
+	if variable["persistent"]:
+		var file := FileAccess.open(PATH_CONVARS_FILE, FileAccess.WRITE)
+		file.store_var(_variables)
 
 
 func add_console_command(command_name: String, callable: Callable, argument_type: int) -> void:

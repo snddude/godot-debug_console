@@ -30,10 +30,14 @@ Label/styles/normal = SubResource("StyleBoxFlat_ediug")
 resource_name = "fps_label"
 script/source = "extends Label
 
+const CONVAR_SHOW_FPS: String = \"show_fps\"
+
 
 func _enter_tree() -> void:
-	hide()
+	DebugConsole.add_variable(CONVAR_SHOW_FPS, false, true)
 	DebugConsole.add_console_command(\"show_fps\", show_fps, TYPE_NIL)
+
+	visible = DebugConsole.get_variable_value(CONVAR_SHOW_FPS)
 
 
 func _process(_delta: float) -> void:
@@ -48,7 +52,10 @@ func _exit_tree() -> void:
 
 
 func show_fps() -> void:
-	visible = not visible
+	var new_value: bool = not DebugConsole.get_variable_value(CONVAR_SHOW_FPS)
+	DebugConsole.set_variable_value(CONVAR_SHOW_FPS, new_value)
+
+	visible = new_value
 "
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_ediug"]
