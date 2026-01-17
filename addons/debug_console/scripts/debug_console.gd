@@ -81,8 +81,8 @@ func add_console_command(command_name: String, callable: Callable, argument_type
 	_commands[command_name] = DebugConsoleCommand.new(command_name, callable, argument_type)
 
 
-func remove_console_command(command_text: String) -> void:
-	_commands.erase(command_text)
+func remove_console_command(command_name: String) -> void:
+	_commands.erase(command_name)
 
 
 func print_line(message: String, print_type: PrintType) -> void:
@@ -207,8 +207,8 @@ func _help() -> void:
 	var command_list: Array[String] = _commands.keys()
 	command_list.sort()
 
-	for command_text: String in command_list:
-		print_line("- " + command_text, PRINT_TYPE_OUTPUT)
+	for command_name: String in command_list:
+		print_line("- " + command_name, PRINT_TYPE_OUTPUT)
 
 
 func _history() -> void:
