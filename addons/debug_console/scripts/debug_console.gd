@@ -85,7 +85,26 @@ func disallow_show() -> void:
 		_hide_console()
 
 
-func add_variable(variable_name: String, value: Variant, persistent: bool) -> void:
+func print_line(message: String, print_type: PrintType) -> void:
+	var text: String = ""
+
+	match print_type:
+		PRINT_TYPE_LINE:
+			text = "> %s\n"%message
+		PRINT_TYPE_OUTPUT:
+			text = "\t%s\n"%message
+		PRINT_TYPE_DEBUG:
+			text = "%s%s\n"%[_get_timestamp(), message]
+		PRINT_TYPE_WARNING:
+			text = "%s[color=yellow]WARNING:[/color] %s\n"%[_get_timestamp(), message]
+		PRINT_TYPE_ERROR:
+			text = "%s[color=red]ERROR:[/color] %s\n"%[_get_timestamp(), message]
+
+	_rich_text_label.append_text(text)
+	_rich_text_label.scroll_to_line(_rich_text_label.get_line_count())
+
+
+func add_console_variable(variable_name: String, value: Variant, persistent: bool) -> void:
 	if variable_name in _variables.keys():
 		if not persistent:
 			print_line(
@@ -100,7 +119,7 @@ func add_variable(variable_name: String, value: Variant, persistent: bool) -> vo
 		file.store_var(_variables)
 
 
-func remove_variable(variable_name: String) -> void:
+func remove_console_variable(variable_name: String) -> void:
 	if variable_name not in _variables.keys():
 		print_line(
 				'Trying to remove nonexistent console variable "%s"'%variable_name,
@@ -110,7 +129,7 @@ func remove_variable(variable_name: String) -> void:
 	_variables.erase(name)
 
 
-func get_variable_value(variable_name: String) -> Variant:
+func get_console_variable_value(variable_name: String) -> Variant:
 	if variable_name not in _variables.keys():
 		print_line(
 				'Trying to get value of nonexistent console variable "%s"'%variable_name,
@@ -120,7 +139,7 @@ func get_variable_value(variable_name: String) -> Variant:
 	return _variables[variable_name]["value"]
 
 
-func set_variable_value(variable_name: String, value: Variant) -> void:
+func set_console_variable_value(variable_name: String, value: Variant) -> void:
 	if variable_name not in _variables.keys():
 		print_line(
 				'Trying to set value of nonexistent console variable "%s"'%variable_name,
@@ -141,25 +160,6 @@ func add_console_command(command_name: String, callable: Callable, argument_type
 
 func remove_console_command(command_name: String) -> void:
 	_commands.erase(command_name)
-
-
-func print_line(message: String, print_type: PrintType) -> void:
-	var text: String = ""
-
-	match print_type:
-		PRINT_TYPE_LINE:
-			text = "> %s\n"%message
-		PRINT_TYPE_OUTPUT:
-			text = "\t%s\n"%message
-		PRINT_TYPE_DEBUG:
-			text = "%s%s\n"%[_get_timestamp(), message]
-		PRINT_TYPE_WARNING:
-			text = "%s[color=yellow]WARNING:[/color] %s\n"%[_get_timestamp(), message]
-		PRINT_TYPE_ERROR:
-			text = "%s[color=red]ERROR:[/color] %s\n"%[_get_timestamp(), message]
-
-	_rich_text_label.append_text(text)
-	_rich_text_label.scroll_to_line(_rich_text_label.get_line_count())
 
 
 func _show_console() -> void:
