@@ -17,12 +17,13 @@ DebugConsole.print_line(
 )
 ```
 
-The "print_type" argument can have one of the following values:
-- DebugConsole.PRINT_TYPE_LINE - the message is preceded with a ">" character;
-- DebugConsole.PRINT_TYPE_OUTPUT - the message is preceded with a TAB;
-- DebugConsole.PRINT_TYPE_DEBUG - the message is preceded with a timestamp;
-- DebugConsole.PRINT_TYPE_WARNING - the message is preceded with a timestamp and a $\color{Yellow}{\textsf{"WARNING:"}}$ string;
-- DebugConsole.PRINT_TYPE_ERROR - the message is preceded with a timestamp and an $\color{Red}{\textsf{"ERROR:"}}$ string.
+> [!Note]
+> "print_type" can have one of the following values:
+> - DebugConsole.PRINT_TYPE_LINE - the message is preceded with a ">" character;
+> - DebugConsole.PRINT_TYPE_OUTPUT - the message is preceded with a TAB;
+> - DebugConsole.PRINT_TYPE_DEBUG - the message is preceded with a timestamp;
+> - DebugConsole.PRINT_TYPE_WARNING - the message is preceded with a timestamp and a $\color{Yellow}{\textsf{"WARNING:"}}$ string;
+> - DebugConsole.PRINT_TYPE_ERROR - the message is preceded with a timestamp and an $\color{Red}{\textsf{"ERROR:"}}$ string.
 
 ### Variables
 
@@ -55,8 +56,6 @@ DebugConsole.set_console_variable_value(
 
 ### Commands
 
-The way you add a console command is as follows:
-
 ```gdscript
 DebugConsole.add_console_command(
         command_name: String,  # The text that you type into the console to call the command.
@@ -64,16 +63,16 @@ DebugConsole.add_console_command(
         argument_type: int     # The variable type of the command's argument.
 )
 ```
-
-The "argument_type" argument uses the standard TYPE_... values that are provided by Godot (for example: TYPE_NIL, TYPE_INT, TYPE_FLOAT, etc.)
-
 > [!NOTE]
-> Every command that gets added by a node should be removed when that node exits the scene tree. You do this by using the following function:
-> ```gdscript
-> DebugConsole.remove_console_command(
->         command_name: String  # Same as the "command_name" argument in the add_console_command() function.
-> )
-> ```
+> "argument_type" uses the standard TYPE_NIL, TYPE_INT, TYPE_FLOAT, etc. values that are provided by the Godot Engine.
+
+```gdscript
+DebugConsole.remove_console_command(
+        command_name: String  # Same as the "command_name" argument in the add_console_command() function.
+)
+```
+> [!NOTE]
+> Every command that gets added by a node should be removed when that node exits the scene tree.
 
 ## License
 
