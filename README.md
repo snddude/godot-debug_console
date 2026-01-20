@@ -8,6 +8,53 @@ Download the [latest release](https://github.com/snddude/godot-debug_console/rel
 
 ## Usage
 
+### Logging
+
+```gdscript
+DebugConsole.print_line(
+        message: String,       # The message that gets displayed in the console.
+        print_type: PrintType  # Message formatting option.
+)
+```
+
+The "print_type" argument can have one of the following values:
+- DebugConsole.PRINT_TYPE_LINE - the message is preceded with a ">" character;
+- DebugConsole.PRINT_TYPE_OUTPUT - the message is preceded with a TAB;
+- DebugConsole.PRINT_TYPE_DEBUG - the message is preceded with a timestamp;
+- DebugConsole.PRINT_TYPE_WARNING - the message is preceded with a timestamp and a $\color{Yellow}{\textsf{"WARNING:"}}$ string;
+- DebugConsole.PRINT_TYPE_ERROR - the message is preceded with a timestamp and an $\color{Red}{\textsf{"ERROR:"}}$ string.
+
+### Variables
+
+```gdscript
+DebugConsole.add_console_variable(
+        variable_name: String,  # The name of the new variable.
+        value: Variant,         # The initial value of the new variable. Could be of any type.
+        persistent: bool        # A flag that determines whether or not this variable will be persistent across different game sessions.
+)
+```
+
+```gdscript
+DebugConsole.remove_console_variable(
+        variable_name: String  # Same as the "variable_name" argument in the add_console_variable() function.
+)
+```
+
+```gdscript
+DebugConsole.get_console_variable_value(
+        variable_name: String  # Same as the "variable_name" argument in the add_console_variable() function.
+)
+```
+
+```gdscript
+DebugConsole.set_console_variable_value(
+        variable_name: String,  # Same as the "variable_name" argument in the add_console_variable() function.
+        value: Variant          # Same as the "value" argument in the add_console_variable() function.
+)
+```
+
+### Commands
+
 The way you add a console command is as follows:
 
 ```gdscript
@@ -27,22 +74,6 @@ The "argument_type" argument uses the standard TYPE_... values that are provided
 >         command_name: String  # Same as the "command_name" argument in the add_console_command() function.
 > )
 > ```
-
-To log a message to the console you do this:
-
-```gdscript
-DebugConsole.print_line(
-        message: String,       # The message that gets displayed in the console.
-        print_type: PrintType  # Message display formatting option.
-)
-```
-
-The "print_type" argument can have one of the following values:
-- DebugConsole.PRINT_TYPE_LINE - the message is preceded with a ">" character.
-- DebugConsole.PRINT_TYPE_OUTPUT - the message is preceded with a "\t".
-- DebugConsole.PRINT_TYPE_DEBUG - the message is preceded with a timestamp.
-- DebugConsole.PRINT_TYPE_WARNING - the message is preceded with a timestamp, a string that says "WARNING:" and is also highlighted in yellow.
-- DebugConsole.PRINT_TYPE_ERROR - the message is preceded with a timestamp, a string that says "ERROR:" and is also highlighted in red.
 
 ## License
 
