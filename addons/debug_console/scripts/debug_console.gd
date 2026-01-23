@@ -56,19 +56,11 @@ func _input(event: InputEvent) -> void:
 	if event.is_action_pressed("ui_cancel"):
 		_hide_console()
 
-	var changed_history_index: bool = false
-
 	if event.is_action_pressed("ui_up"):
 		_increment_history_index(1)
-		changed_history_index = true
-	elif event.is_action_pressed("ui_down"):
-		_increment_history_index(-1)
-		changed_history_index = true
 
-	if changed_history_index:
-		_line_edit.text = _get_command_from_history()
-		_line_edit.accept_event()
-		_line_edit.caret_column = _line_edit.text.length()
+	if event.is_action_pressed("ui_down"):
+		_increment_history_index(-1)
 
 
 func _process(_delta: float) -> void:
@@ -245,12 +237,9 @@ func _increment_history_index(ammount: int) -> void:
 	_current_history_index += ammount
 	_current_history_index = clamp(_current_history_index, 0, _command_history.size() - 1)
 
-
-func _get_command_from_history() -> String:
-	if _command_history.size() == 0:
-		return ""
-
-	return _command_history[_current_history_index]
+	_line_edit.text = _command_history[_current_history_index]
+	_line_edit.accept_event()
+	_line_edit.set_caret_column(_line_edit.text.length())
 
 
 func _exec(input_text: String) -> void:
