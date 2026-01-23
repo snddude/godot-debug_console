@@ -6,6 +6,7 @@ signal hidden
 enum PrintType {}
 
 const PATH_CONVARS_FILE: String = "user://convars.file"
+
 const PRINT_TYPE_LINE: PrintType = 0
 const PRINT_TYPE_OUTPUT: PrintType = 1
 const PRINT_TYPE_DEBUG: PrintType = 2
@@ -25,6 +26,7 @@ var _commands: Dictionary[String, DebugConsoleCommand] = {}
 
 
 func _enter_tree() -> void:
+	# Load persistent variables from disk.
 	var file := FileAccess.open(PATH_CONVARS_FILE, FileAccess.READ)
 	if file:
 		_variables = file.get_var()
@@ -115,8 +117,7 @@ func add_console_variable(variable_name: String, value: Variant, persistent: boo
 	_variables[variable_name] = {"value": value, "persistent": persistent}
 
 	if persistent:
-		var file := FileAccess.open(PATH_CONVARS_FILE, FileAccess.WRITE)
-		file.store_var(_variables)
+		_save_persistent_variables()
 
 
 func remove_console_variable(variable_name: String) -> void:
@@ -150,8 +151,7 @@ func set_console_variable_value(variable_name: String, value: Variant) -> void:
 	variable["value"] = value
 
 	if variable["persistent"]:
-		var file := FileAccess.open(PATH_CONVARS_FILE, FileAccess.WRITE)
-		file.store_var(_variables)
+		_save_persistent_variables()
 
 
 func add_console_command(command_name: String, callable: Callable, argument_type: int) -> void:
@@ -174,6 +174,17 @@ func _hide_console() -> void:
 	_line_edit.clear()
 
 	hidden.emit()
+
+
+func _save_persistent_variables() -> void:
+	var persistent_variables: Dictionary[String, Dictionary] = {}
+
+	for key: String in _variables.keys():
+		if _variables[key]["persistent"]:
+			persistent_variables[key] = _variables[key]
+
+	var file := FileAccess.open(PATH_CONVARS_FILE, FileAccess.WRITE)
+	file.store_var(persistent_variables)
 
 
 func _parse_input_text(_discard: String = "") -> void:

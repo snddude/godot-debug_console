@@ -81,6 +81,8 @@ func _enter_tree() -> void:
 	DebugConsole.add_console_command(\"wireframe\", wireframe, TYPE_NIL)
 	DebugConsole.add_console_command(\"overdraw\", overdraw, TYPE_NIL)
 
+	DebugConsole.add_console_variable(\"unshaded\", false, false)
+
 
 func _exit_tree() -> void:
 	DebugConsole.remove_console_command(\"unshaded\")
