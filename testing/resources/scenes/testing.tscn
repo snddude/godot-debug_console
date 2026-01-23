@@ -35,7 +35,7 @@ const CONVAR_SHOW_FPS: String = \"show_fps\"
 
 func _enter_tree() -> void:
 	DebugConsole.add_console_variable(CONVAR_SHOW_FPS, false, true)
-	DebugConsole.add_console_command(\"show_fps\", show_fps, TYPE_NIL)
+	DebugConsole.add_console_command(\"show_fps\", show_fps, TYPE_INT)
 
 	visible = DebugConsole.get_console_variable_value(CONVAR_SHOW_FPS)
 
@@ -51,8 +51,8 @@ func _exit_tree() -> void:
 	DebugConsole.remove_console_command(\"show_fps\")
 
 
-func show_fps() -> void:
-	var new_value: bool = not DebugConsole.get_console_variable_value(CONVAR_SHOW_FPS)
+func show_fps(value: int) -> void:
+	var new_value: bool = bool(value)
 	DebugConsole.set_console_variable_value(CONVAR_SHOW_FPS, new_value)
 
 	visible = new_value
