@@ -33,7 +33,8 @@ enabled=PackedStringArray("res://addons/debug_console/plugin.cfg", "res://addons
 
 folder_colors={
 "res://addons/": "red",
-"res://testing/": "green"
+"res://repository/": "orange",
+"res://testing/": "yellow"
 }
 
 [input]

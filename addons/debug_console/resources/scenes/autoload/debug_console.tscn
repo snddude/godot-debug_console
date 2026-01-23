@@ -6,6 +6,7 @@
 [node name="DebugConsole" type="Window" node_paths=PackedStringArray("_rich_text_label", "_line_edit", "_button")]
 process_mode = 3
 disable_3d = true
+oversampling_override = 1.0
 title = "Console"
 position = Vector2i(11, 29)
 size = Vector2i(320, 256)
