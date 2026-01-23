@@ -22,7 +22,7 @@ var _current_history_index: int = -1
 var _can_show: bool = true
 var _command_history: Array[String] = [""]
 var _variables: Dictionary[String, Dictionary] = {}
-var _commands: Dictionary[String, DebugConsoleCommand] = {}
+var _commands: Dictionary[String, Dictionary] = {}
 
 
 func _enter_tree() -> void:
@@ -155,7 +155,7 @@ func set_console_variable_value(variable_name: String, value: Variant) -> void:
 
 
 func add_console_command(command_name: String, callable: Callable, argument_type: int) -> void:
-	_commands[command_name] = DebugConsoleCommand.new(command_name, callable, argument_type)
+	_commands[command_name] = {"callable": callable, "argument_type": argument_type}
 
 
 func remove_console_command(command_name: String) -> void:
@@ -206,9 +206,9 @@ func _parse_input_text(_discard: String = "") -> void:
 		print_line('invalid command "%s"'%command_name, PRINT_TYPE_ERROR)
 		return
 
-	var command: DebugConsoleCommand = _commands[command_name]
-	var command_argument_type: int = command.get_argument_type()
-	var command_callable: Callable = command.get_callable()
+	var command: Dictionary = _commands[command_name]
+	var command_callable: Callable = command["callable"]
+	var command_argument_type: int = command["argument_type"]
 
 	if command_argument_type == TYPE_NIL:
 		if input_text_split.size() > 1:
@@ -293,27 +293,3 @@ func _clear() -> void:
 
 func _exit() -> void:
 	get_tree().quit()
-
-
-class DebugConsoleCommand extends RefCounted:
-	var _name: String
-	var _callable: Callable
-	var _argument_type: int
-
-
-	func _init(name: String, command_callable: Callable, command_argument_type: int) -> void:
-		_name = name
-		_callable = command_callable
-		_argument_type = command_argument_type
-
-
-	func get_name() -> String:
-		return _name
-
-
-	func get_callable() -> Callable:
-		return _callable
-
-
-	func get_argument_type() -> int:
-		return _argument_type
