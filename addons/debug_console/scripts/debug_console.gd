@@ -5,6 +5,8 @@ signal hidden
 
 enum PrintType {}
 
+const PATH_CONVARS_FILE: String = "user://convars.file"
+
 const PRINT_TYPE_LINE: PrintType = 0
 const PRINT_TYPE_OUTPUT: PrintType = 1
 const PRINT_TYPE_DEBUG: PrintType = 2
@@ -18,8 +20,16 @@ const PRINT_TYPE_ERROR: PrintType = 4
 
 var _current_history_index: int = -1
 var _can_show: bool = true
-var _commands: Dictionary[String, DebugConsoleCommand] = {}
 var _command_history: Array[String] = [""]
+var _variables: Dictionary[String, Dictionary] = {}
+var _commands: Dictionary[String, Dictionary] = {}
+
+
+func _enter_tree() -> void:
+	# Load persistent variables from disk as early as possible.
+	var file := FileAccess.open(PATH_CONVARS_FILE, FileAccess.READ)
+	if file:
+		_variables = file.get_var()
 
 
 func _ready() -> void:
@@ -46,19 +56,11 @@ func _input(event: InputEvent) -> void:
 	if event.is_action_pressed("ui_cancel"):
 		_hide_console()
 
-	var changed_history_index: bool = false
-
 	if event.is_action_pressed("ui_up"):
 		_increment_history_index(1)
-		changed_history_index = true
-	elif event.is_action_pressed("ui_down"):
-		_increment_history_index(-1)
-		changed_history_index = true
 
-	if changed_history_index:
-		_line_edit.text = _get_command_from_history()
-		_line_edit.accept_event()
-		_line_edit.caret_column = _line_edit.text.length()
+	if event.is_action_pressed("ui_down"):
+		_increment_history_index(-1)
 
 
 func _process(_delta: float) -> void:
@@ -75,14 +77,6 @@ func disallow_show() -> void:
 
 	if visible:
 		_hide_console()
-
-
-func add_console_command(command_name: String, callable: Callable, argument_type: int) -> void:
-	_commands[command_name] = DebugConsoleCommand.new(command_name, callable, argument_type)
-
-
-func remove_console_command(command_name: String) -> void:
-	_commands.erase(command_name)
 
 
 func print_line(message: String, print_type: PrintType) -> void:
@@ -104,6 +98,65 @@ func print_line(message: String, print_type: PrintType) -> void:
 	_rich_text_label.scroll_to_line(_rich_text_label.get_line_count())
 
 
+func add_console_variable(variable_name: String, value: Variant, persistent: bool) -> void:
+	if variable_name in _variables.keys():
+		if not persistent:
+			print_line(
+					'Trying to add duplicate console variable "%s"'%variable_name,
+					PRINT_TYPE_ERROR)
+		return
+
+	_variables[variable_name] = {"value": value, "persistent": persistent}
+
+	if persistent:
+		_save_persistent_variables()
+
+
+func remove_console_variable(variable_name: String) -> void:
+	if variable_name not in _variables.keys():
+		print_line(
+				'Trying to remove nonexistent console variable "%s"'%variable_name,
+				PRINT_TYPE_ERROR)
+		return
+
+	_variables.erase(name)
+
+
+func get_console_variable_value(variable_name: String) -> Variant:
+	if variable_name not in _variables.keys():
+		print_line(
+				'Trying to get value of nonexistent console variable "%s"'%variable_name,
+				PRINT_TYPE_ERROR)
+		return null
+
+	return _variables[variable_name]["value"]
+
+
+func set_console_variable_value(variable_name: String, value: Variant) -> void:
+	if variable_name not in _variables.keys():
+		print_line(
+				'Trying to set value of nonexistent console variable "%s"'%variable_name,
+				PRINT_TYPE_ERROR)
+		return
+
+	var variable: Dictionary = _variables[variable_name]
+	variable["value"] = value
+
+	if variable["persistent"]:
+		_save_persistent_variables()
+
+
+func add_console_command(
+		command_name: String,
+		callable: Callable,
+		argument_type: Variant.Type) -> void:
+	_commands[command_name] = {"callable": callable, "argument_type": argument_type}
+
+
+func remove_console_command(command_name: String) -> void:
+	_commands.erase(command_name)
+
+
 func _show_console() -> void:
 	show()
 	_line_edit.grab_focus()
@@ -116,6 +169,17 @@ func _hide_console() -> void:
 	_line_edit.clear()
 
 	hidden.emit()
+
+
+func _save_persistent_variables() -> void:
+	var persistent_variables: Dictionary[String, Dictionary] = {}
+
+	for key: String in _variables.keys():
+		if _variables[key]["persistent"]:
+			persistent_variables[key] = _variables[key]
+
+	var file := FileAccess.open(PATH_CONVARS_FILE, FileAccess.WRITE)
+	file.store_var(persistent_variables)
 
 
 func _parse_input_text(_discard: String = "") -> void:
@@ -137,9 +201,9 @@ func _parse_input_text(_discard: String = "") -> void:
 		print_line('invalid command "%s"'%command_name, PRINT_TYPE_ERROR)
 		return
 
-	var command: DebugConsoleCommand = _commands[command_name]
-	var command_argument_type: int = command.get_argument_type()
-	var command_callable: Callable = command.get_callable()
+	var command: Dictionary = _commands[command_name]
+	var command_callable: Callable = command["callable"]
+	var command_argument_type: int = command["argument_type"]
 
 	if command_argument_type == TYPE_NIL:
 		if input_text_split.size() > 1:
@@ -176,12 +240,9 @@ func _increment_history_index(ammount: int) -> void:
 	_current_history_index += ammount
 	_current_history_index = clamp(_current_history_index, 0, _command_history.size() - 1)
 
-
-func _get_command_from_history() -> String:
-	if _command_history.size() == 0:
-		return ""
-
-	return _command_history[_current_history_index]
+	_line_edit.text = _command_history[_current_history_index]
+	_line_edit.accept_event()
+	_line_edit.set_caret_column(_line_edit.text.length())
 
 
 func _exec(input_text: String) -> void:
@@ -224,27 +285,3 @@ func _clear() -> void:
 
 func _exit() -> void:
 	get_tree().quit()
-
-
-class DebugConsoleCommand extends RefCounted:
-	var _name: String
-	var _callable: Callable
-	var _argument_type: int
-
-
-	func _init(name: String, command_callable: Callable, command_argument_type: int) -> void:
-		_name = name
-		_callable = command_callable
-		_argument_type = command_argument_type
-
-
-	func get_name() -> String:
-		return _name
-
-
-	func get_callable() -> Callable:
-		return _callable
-
-
-	func get_argument_type() -> int:
-		return _argument_type

@@ -30,10 +30,14 @@ Label/styles/normal = SubResource("StyleBoxFlat_ediug")
 resource_name = "fps_label"
 script/source = "extends Label
 
+const CONVAR_SHOW_FPS: String = \"show_fps\"
+
 
 func _enter_tree() -> void:
-	hide()
-	DebugConsole.add_console_command(\"show_fps\", show_fps, TYPE_NIL)
+	DebugConsole.add_console_variable(CONVAR_SHOW_FPS, false, true)
+	DebugConsole.add_console_command(\"show_fps\", show_fps, TYPE_INT)
+
+	visible = DebugConsole.get_console_variable_value(CONVAR_SHOW_FPS)
 
 
 func _process(_delta: float) -> void:
@@ -47,8 +51,11 @@ func _exit_tree() -> void:
 	DebugConsole.remove_console_command(\"show_fps\")
 
 
-func show_fps() -> void:
-	visible = not visible
+func show_fps(value: int) -> void:
+	var new_value: bool = bool(value)
+	DebugConsole.set_console_variable_value(CONVAR_SHOW_FPS, new_value)
+
+	visible = new_value
 "
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_ediug"]
@@ -73,6 +80,8 @@ func _enter_tree() -> void:
 	DebugConsole.add_console_command(\"unshaded\", unshaded, TYPE_NIL)
 	DebugConsole.add_console_command(\"wireframe\", wireframe, TYPE_NIL)
 	DebugConsole.add_console_command(\"overdraw\", overdraw, TYPE_NIL)
+
+	DebugConsole.add_console_variable(\"unshaded\", false, false)
 
 
 func _exit_tree() -> void:
