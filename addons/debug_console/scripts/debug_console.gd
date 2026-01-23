@@ -146,7 +146,10 @@ func set_console_variable_value(variable_name: String, value: Variant) -> void:
 		_save_persistent_variables()
 
 
-func add_console_command(command_name: String, callable: Callable, argument_type: int) -> void:
+func add_console_command(
+		command_name: String,
+		callable: Callable,
+		argument_type: Variant.Type) -> void:
 	_commands[command_name] = {"callable": callable, "argument_type": argument_type}
 
 
