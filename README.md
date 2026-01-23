@@ -2,8 +2,8 @@
 
 A debug console for Godot. Partly inspired by [jitspoe's godot-console](https://github.com/jitspoe/godot-console) implementation.
 
-<p aling="center">
-![Preview of the debug console window.](repository/preview.png)
+<p align="center">
+  <img src="https://github.com/snddude/godot-debug_console/blob/main/repository/preview.png" alt="A preview of the debug console window.">
 </p>
 
 ## Installation
