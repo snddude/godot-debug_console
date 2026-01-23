@@ -26,7 +26,7 @@ var _commands: Dictionary[String, Dictionary] = {}
 
 
 func _enter_tree() -> void:
-	# Load persistent variables from disk.
+	# Load persistent variables from disk as early as possible.
 	var file := FileAccess.open(PATH_CONVARS_FILE, FileAccess.READ)
 	if file:
 		_variables = file.get_var()
