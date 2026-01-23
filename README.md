@@ -66,7 +66,7 @@ Console commands are added from classes. Every command you add should be removed
 
 ```gdscript
 DebugConsole.add_console_command(
-        command_name: String,  # The text that you type into the console to call the command.
+        command_name: String,        # The text that you type into the console to call the command.
         callable: Callable,          # The function that gets called.
         argument_type: Variant.Type  # The variable type of the command's argument.
 )
