@@ -31,7 +31,7 @@ DebugConsole.print_line(
 
 This addon allows you to store values of different types via creation of console variables. Variables can also be persistent. Persistent variables are stored on disk ("user://convars.file") and get loaded when the console enters the SceneTree. They allow for tracking of various values between different game sessions.
 
-Use case example: a console variable can be used to track whether or not a debug UI element should be visible after a scene change.
+Use case example: a console variable can be used to track whether or not a debug UI element should still be visible after a scene change.
 
 ```gdscript
 DebugConsole.add_console_variable(
