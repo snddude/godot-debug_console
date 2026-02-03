@@ -23,9 +23,13 @@ var _can_show: bool = true
 var _command_history: Array[String] = [""]
 var _variables: Dictionary[String, Dictionary] = {}
 var _commands: Dictionary[String, Dictionary] = {}
+var _logger: DebugConsoleLogger = null
 
 
 func _enter_tree() -> void:
+	_logger = DebugConsoleLogger.new()
+	OS.add_logger(_logger)
+
 	# Load persistent variables from disk as early as possible.
 	var file := FileAccess.open(PATH_CONVARS_FILE, FileAccess.READ)
 	if file:
@@ -66,6 +70,10 @@ func _input(event: InputEvent) -> void:
 func _process(_delta: float) -> void:
 	if _can_show and Input.is_action_just_pressed("toggle_debug_console"):
 		_hide_console() if visible else _show_console()
+
+
+func _exit_tree() -> void:
+	OS.remove_logger(_logger)
 
 
 func allow_show() -> void:
@@ -285,3 +293,44 @@ func _clear() -> void:
 
 func _exit() -> void:
 	get_tree().quit()
+
+
+class DebugConsoleLogger extends Logger:
+	func _log_message(message: String, error: bool) -> void:
+		var print_type: DebugConsole.PrintType = DebugConsole.PRINT_TYPE_DEBUG
+
+		if error:
+			print_type = DebugConsole.PRINT_TYPE_ERROR
+
+		DebugConsole.call_deferred("print_line", message, print_type)
+
+
+	func _log_error(
+			function: String,
+			file: String,
+			line: int,
+			code: String,
+			rationale: String,
+			editor_notify: bool,
+			error_type: int,
+			script_backtraces: Array[ScriptBacktrace]) -> void:
+		var trace_indent: int = 0
+		var script_backtraces_text: String = ""
+		var print_type: DebugConsole.PrintType
+
+		match error_type:
+			ERROR_TYPE_WARNING:
+				print_type = DebugConsole.PRINT_TYPE_WARNING
+				trace_indent = 8
+			ERROR_TYPE_ERROR, ERROR_TYPE_SCRIPT, ERROR_TYPE_SHADER:
+				print_type = DebugConsole.PRINT_TYPE_ERROR
+				trace_indent = 6
+
+		var trace: String = "%*s %s (%s:%s)" % [trace_indent, "at:", function, file, line]
+
+		for backtrace: ScriptBacktrace in script_backtraces:
+			script_backtraces_text += backtrace.format(trace_indent - 3) + "\n"
+
+		DebugConsole.call_deferred(
+				"print_line", "%s %s\n%s\n%s"%[code, rationale, trace, script_backtraces_text],
+				print_type)
