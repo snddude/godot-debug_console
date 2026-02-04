@@ -6,9 +6,9 @@ signal hidden
 const PATH_CONVARS_FILE: String = "user://convars.file"
 
 @export_group("Nodes")
-@export var _rich_text_label: RichTextLabel
-@export var _line_edit: LineEdit
-@export var _button: Button
+@export var rich_text_label: RichTextLabel
+@export var line_edit: LineEdit
+@export var button: Button
 
 var _current_history_index: int = -1
 var _can_show: bool = true
@@ -31,9 +31,9 @@ func _enter_tree() -> void:
 func _ready() -> void:
 	_hide_console()
 
-	_button.pressed.connect(_parse_input_text)
-	_button.pressed.connect(_line_edit.grab_focus)
-	_line_edit.text_submitted.connect(_parse_input_text)
+	button.pressed.connect(_parse_input_text)
+	button.pressed.connect(line_edit.grab_focus)
+	line_edit.text_submitted.connect(_parse_input_text)
 
 	focus_exited.connect(_hide_console)
 	close_requested.connect(_hide_console)
@@ -80,8 +80,8 @@ func disallow_show() -> void:
 
 
 func push_text(text: String) -> void:
-	_rich_text_label.append_text(text + "\n")
-	_rich_text_label.scroll_to_line(_rich_text_label.get_line_count())
+	rich_text_label.append_text(text + "\n")
+	rich_text_label.scroll_to_line(rich_text_label.get_line_count())
 
 
 func add_console_variable(variable_name: String, value: Variant, persistent: bool) -> void:
@@ -137,14 +137,14 @@ func remove_console_command(command_name: String) -> void:
 
 func _show_console() -> void:
 	show()
-	_line_edit.grab_focus()
+	line_edit.grab_focus()
 
 	shown.emit()
 
 
 func _hide_console() -> void:
 	hide()
-	_line_edit.clear()
+	line_edit.clear()
 
 	hidden.emit()
 
@@ -161,10 +161,10 @@ func _save_persistent_variables() -> void:
 
 
 func _parse_input_text(_discard: String = "") -> void:
-	var input_text: String = _line_edit.text
+	var input_text: String = line_edit.text
 
-	_line_edit.clear()
-	push_text("> %s"%input_text)
+	line_edit.clear()
+	push_text("$ %s"%input_text)
 
 	if input_text.length() == 0:
 		return
@@ -214,9 +214,9 @@ func _increment_history_index(ammount: int) -> void:
 	_current_history_index += ammount
 	_current_history_index = clamp(_current_history_index, 0, _command_history.size() - 1)
 
-	_line_edit.text = _command_history[_current_history_index]
-	_line_edit.accept_event()
-	_line_edit.set_caret_column(_line_edit.text.length())
+	line_edit.text = _command_history[_current_history_index]
+	line_edit.accept_event()
+	line_edit.set_caret_column(line_edit.text.length())
 
 
 func _exec(input_text: String) -> void:
@@ -255,7 +255,7 @@ func _history() -> void:
 
 
 func _clear() -> void:
-	_rich_text_label.clear()
+	rich_text_label.clear()
 
 
 func _exit() -> void:
