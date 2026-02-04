@@ -3,15 +3,7 @@ extends Window
 signal shown
 signal hidden
 
-enum PrintType {}
-
 const PATH_CONVARS_FILE: String = "user://convars.file"
-
-const PRINT_TYPE_LINE: PrintType = 0
-const PRINT_TYPE_OUTPUT: PrintType = 1
-const PRINT_TYPE_DEBUG: PrintType = 2
-const PRINT_TYPE_WARNING: PrintType = 3
-const PRINT_TYPE_ERROR: PrintType = 4
 
 @export_group("Nodes")
 @export var _rich_text_label: RichTextLabel
@@ -87,31 +79,15 @@ func disallow_show() -> void:
 		_hide_console()
 
 
-func print_line(message: String, print_type: PrintType) -> void:
-	var text: String = ""
-
-	match print_type:
-		PRINT_TYPE_LINE:
-			text = "> %s\n"%message
-		PRINT_TYPE_OUTPUT:
-			text = "\t%s\n"%message
-		PRINT_TYPE_DEBUG:
-			text = "%s%s\n"%[_get_timestamp(), message]
-		PRINT_TYPE_WARNING:
-			text = "%s[color=yellow]WARNING:[/color] %s\n"%[_get_timestamp(), message]
-		PRINT_TYPE_ERROR:
-			text = "%s[color=red]ERROR:[/color] %s\n"%[_get_timestamp(), message]
-
-	_rich_text_label.append_text(text)
+func push_text(text: String) -> void:
+	_rich_text_label.append_text(text + "\n")
 	_rich_text_label.scroll_to_line(_rich_text_label.get_line_count())
 
 
 func add_console_variable(variable_name: String, value: Variant, persistent: bool) -> void:
 	if variable_name in _variables.keys():
 		if not persistent:
-			print_line(
-					'Trying to add duplicate console variable "%s"'%variable_name,
-					PRINT_TYPE_ERROR)
+			push_error('Trying to add duplicate console variable "%s"'%variable_name)
 		return
 
 	_variables[variable_name] = {"value": value, "persistent": persistent}
@@ -122,9 +98,7 @@ func add_console_variable(variable_name: String, value: Variant, persistent: boo
 
 func remove_console_variable(variable_name: String) -> void:
 	if variable_name not in _variables.keys():
-		print_line(
-				'Trying to remove nonexistent console variable "%s"'%variable_name,
-				PRINT_TYPE_ERROR)
+		push_error('Trying to remove nonexistent console variable "%s"'%variable_name)
 		return
 
 	_variables.erase(name)
@@ -132,9 +106,7 @@ func remove_console_variable(variable_name: String) -> void:
 
 func get_console_variable_value(variable_name: String) -> Variant:
 	if variable_name not in _variables.keys():
-		print_line(
-				'Trying to get value of nonexistent console variable "%s"'%variable_name,
-				PRINT_TYPE_ERROR)
+		push_error('Trying to get value of nonexistent console variable "%s"'%variable_name)
 		return null
 
 	return _variables[variable_name]["value"]
@@ -142,9 +114,7 @@ func get_console_variable_value(variable_name: String) -> Variant:
 
 func set_console_variable_value(variable_name: String, value: Variant) -> void:
 	if variable_name not in _variables.keys():
-		print_line(
-				'Trying to set value of nonexistent console variable "%s"'%variable_name,
-				PRINT_TYPE_ERROR)
+		push_error('Trying to set value of nonexistent console variable "%s"'%variable_name)
 		return
 
 	var variable: Dictionary = _variables[variable_name]
@@ -194,7 +164,7 @@ func _parse_input_text(_discard: String = "") -> void:
 	var input_text: String = _line_edit.text
 
 	_line_edit.clear()
-	print_line(input_text, PRINT_TYPE_LINE)
+	push_text("> %s"%input_text)
 
 	if input_text.length() == 0:
 		return
@@ -206,7 +176,7 @@ func _parse_input_text(_discard: String = "") -> void:
 	var command_name: String = input_text_split[0]
 
 	if command_name not in _commands.keys():
-		print_line('invalid command "%s"'%command_name, PRINT_TYPE_ERROR)
+		push_error('invalid command "%s"'%command_name)
 		return
 
 	var command: Dictionary = _commands[command_name]
@@ -215,14 +185,14 @@ func _parse_input_text(_discard: String = "") -> void:
 
 	if command_argument_type == TYPE_NIL:
 		if input_text_split.size() > 1:
-			print_line('command "%s" does not require an argument'%command_name, PRINT_TYPE_ERROR)
+			push_error('command "%s" does not require an argument'%command_name)
 			return
 
 		command_callable.call()
 		return
 
 	if input_text_split.size() == 1:
-		print_line('command "%s" requires an argument'%command_name, PRINT_TYPE_ERROR)
+		push_error('command "%s" requires an argument'%command_name)
 		return
 
 	var argument: Variant = input_text_split[1]
@@ -231,14 +201,10 @@ func _parse_input_text(_discard: String = "") -> void:
 		argument = str_to_var(argument)
 
 	if typeof(argument) != command_argument_type:
-		print_line('invalid argument type for command "%s"'%command_name, PRINT_TYPE_ERROR)
+		push_error('invalid argument type for command "%s"'%command_name)
 		return
 
 	command_callable.call(argument)
-
-
-func _get_timestamp() -> String:
-	return "[ %s ] "%Time.get_time_string_from_system()
 
 
 func _increment_history_index(ammount: int) -> void:
@@ -258,34 +224,34 @@ func _exec(input_text: String) -> void:
 	var error: Error = expression.parse(input_text)
 
 	if error != OK:
-		print_line(expression.get_error_text(), PRINT_TYPE_ERROR)
+		push_error(expression.get_error_text())
 		return
 
 	var result: Variant = expression.execute([], self)
 
 	if expression.has_execute_failed():
-		print_line(expression.get_error_text(), PRINT_TYPE_ERROR)
+		push_error(expression.get_error_text())
 		return
 
 	if result:
-		print_line(str(result), PRINT_TYPE_OUTPUT)
+		push_text(str(result))
 
 
 func _help() -> void:
-	print_line("Here's a list of all available commands:", PRINT_TYPE_OUTPUT)
+	push_text("Here's a list of all available commands:")
 
 	var command_list: Array[String] = _commands.keys()
 	command_list.sort()
 
 	for command_name: String in command_list:
-		print_line("- " + command_name, PRINT_TYPE_OUTPUT)
+		push_text("\t- %s"%command_name)
 
 
 func _history() -> void:
-	print_line("Command history for current session:", PRINT_TYPE_OUTPUT)
+	push_text("Command history for current session:")
 
 	for i: int in range(_command_history.size() - 1, 1, -1):
-		print_line("%d  "%(_command_history.size()-i) + _command_history[i], PRINT_TYPE_OUTPUT)
+		push_text("\t%d  "%(_command_history.size() - i) + _command_history[i])
 
 
 func _clear() -> void:
@@ -297,13 +263,17 @@ func _exit() -> void:
 
 
 class DebugConsoleLogger extends Logger:
+	func _get_timestamp() -> String:
+		return "[ %s ] "%Time.get_time_string_from_system()
+
+
 	func _log_message(message: String, error: bool) -> void:
-		var print_type: DebugConsole.PrintType = DebugConsole.PRINT_TYPE_DEBUG
+		var text: String = _get_timestamp()
 
 		if error:
-			print_type = DebugConsole.PRINT_TYPE_ERROR
+			text += "[color=red]ERROR:[/color] "
 
-		DebugConsole.call_deferred("print_line", message, print_type)
+		DebugConsole.call_deferred("push_text", text + message)
 
 
 	func _log_error(
@@ -315,23 +285,19 @@ class DebugConsoleLogger extends Logger:
 			editor_notify: bool,
 			error_type: int,
 			script_backtraces: Array[ScriptBacktrace]) -> void:
-		var trace_indent: int = 0
-		var script_backtraces_text: String = ""
-		var print_type: DebugConsole.PrintType
+		var text: String = _get_timestamp()
 
 		match error_type:
 			ERROR_TYPE_WARNING:
-				print_type = DebugConsole.PRINT_TYPE_WARNING
-				trace_indent = 8
+				text += "[color=yellow]WARNING:[/color] "
 			ERROR_TYPE_ERROR, ERROR_TYPE_SCRIPT, ERROR_TYPE_SHADER:
-				print_type = DebugConsole.PRINT_TYPE_ERROR
-				trace_indent = 6
+				text += "[color=red]ERROR:[/color] "
 
-		var trace: String = "%*s %s (%s:%s)" % [trace_indent, "at:", function, file, line]
-
-		for backtrace: ScriptBacktrace in script_backtraces:
-			script_backtraces_text += backtrace.format(trace_indent - 3) + "\n"
+		var message: String = "%s %s\n"%[text + code, rationale]
+		var trace: String = "At: %s (%s:%s)\n" % [function, file, line]
 
 		DebugConsole.call_deferred(
-				"print_line", "%s %s\n%s\n%s"%[code, rationale, trace, script_backtraces_text],
-				print_type)
+				"push_text", "%s%s%s"%[message, trace, script_backtraces.pop_front()])
+
+		for backtrace: ScriptBacktrace in script_backtraces:
+			DebugConsole.call_deferred("push_text", "\t%s"%backtrace.format(0))
