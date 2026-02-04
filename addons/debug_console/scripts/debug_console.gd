@@ -261,13 +261,14 @@ func _exec(input_text: String) -> void:
 		print_line(expression.get_error_text(), PRINT_TYPE_ERROR)
 		return
 
-	var result: String = str(expression.execute([], self))
+	var result: Variant = expression.execute([], self)
 
 	if expression.has_execute_failed():
 		print_line(expression.get_error_text(), PRINT_TYPE_ERROR)
 		return
 
-	print_line(result, PRINT_TYPE_OUTPUT)
+	if result:
+		print_line(str(result), PRINT_TYPE_OUTPUT)
 
 
 func _help() -> void:
