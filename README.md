@@ -27,8 +27,7 @@ DebugConsole.push_text(
 ```
 
 > [!NOTE]
-> All text printed with this method ends with a new line character, so you don't need to include it at the end of your arbitrary message.
-
+> All text printed with this method has a new line character inserted at the end.
 
 ### Variables
 
