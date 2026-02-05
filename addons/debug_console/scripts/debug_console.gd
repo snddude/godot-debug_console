@@ -273,7 +273,7 @@ class DebugConsoleLogger extends Logger:
 		if error:
 			text += "[color=red]ERROR:[/color] "
 
-		DebugConsole.call_deferred("push_text", text + message)
+		DebugConsole.call_deferred("push_text", text + message.trim_suffix("\n"))
 
 
 	func _log_error(
