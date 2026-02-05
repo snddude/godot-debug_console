@@ -14,22 +14,21 @@ Download the [latest release](https://github.com/snddude/godot-debug_console/rel
 
 ### Logging
 
-You can print various messages to the console. There are several print types implemented to allow for message formating (errors, warnings, debug messages, etc.). As of now, engine errors and warnings are not printed to the console, so you'll still have to rely on the editor's debugger tab to see those.
+You can print various messages to the console using the  print(), push_error(), push_warning(), etc. functions provided by Godot Engine. Engine errors and warnings are also visible in the console. All warnings and errors include stack trace information.
+
+print() messages are preceded with a timestamp, push_warning() - a timestamp and a $\color{Yellow}{\textsf{"WARNING:"}}$ string, push_error() - a timestamp and an $\color{Red}{\textsf{"ERROR:"}}$ string.
+
+If you wish to print some arbitrary text to the console, you can use push_text():
 
 ```gdscript
-DebugConsole.print_line(
-        message: String,       # The message that gets displayed in the console.
-        print_type: PrintType  # Message formatting option.
+DebugConsole.push_text(
+        text: String  # Text you wish to print to the console.
 )
 ```
 
-> [!Important]
-> "print_type" accepts one of the following values:
-> - DebugConsole.PRINT_TYPE_LINE - the message is preceded with a ">" character;
-> - DebugConsole.PRINT_TYPE_OUTPUT - the message is preceded with a TAB;
-> - DebugConsole.PRINT_TYPE_DEBUG - the message is preceded with a timestamp;
-> - DebugConsole.PRINT_TYPE_WARNING - the message is preceded with a timestamp and a $\color{Yellow}{\textsf{"WARNING:"}}$ string;
-> - DebugConsole.PRINT_TYPE_ERROR - the message is preceded with a timestamp and an $\color{Red}{\textsf{"ERROR:"}}$ string.
+> [!NOTE]
+> All text printed with this method ends with a new line character, so you don't need to include it at the end of your arbitrary message.
+
 
 ### Variables
 
