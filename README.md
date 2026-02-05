@@ -1,6 +1,6 @@
 # Debug Console
 
-A debug console for Godot. Partly inspired by [jitspoe's godot-console](https://github.com/jitspoe/godot-console) implementation.
+A debug console for Godot. Once partly inspired by [jitspoe's godot-console](https://github.com/jitspoe/godot-console) implementation.
 
 <p align="center">
   <img src="https://github.com/snddude/godot-debug_console/blob/main/repository/preview.png" alt="A preview of the debug console window.">
