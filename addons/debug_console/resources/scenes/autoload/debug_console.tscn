@@ -1,9 +1,10 @@
-[gd_scene load_steps=3 format=3 uid="uid://cptj8gk2xleig"]
+[gd_scene load_steps=4 format=3 uid="uid://cptj8gk2xleig"]
 
 [ext_resource type="Theme" uid="uid://byac21itgdgs7" path="res://addons/debug_console/resources/debug_console_theme.tres" id="1_ck0rl"]
 [ext_resource type="Script" uid="uid://cxn6p17vg5sph" path="res://addons/debug_console/scripts/debug_console.gd" id="3_5ru4j"]
+[ext_resource type="PackedScene" uid="uid://nps8xk4qwtt7" path="res://addons/debug_console/resources/scenes/suggestion_box.tscn" id="3_lpb6d"]
 
-[node name="DebugConsole" type="Window" node_paths=PackedStringArray("rich_text_label", "line_edit", "button")]
+[node name="DebugConsole" type="Window" node_paths=PackedStringArray("rich_text_label", "line_edit", "button", "suggestion_box")]
 process_mode = 3
 disable_3d = true
 oversampling_override = 1.0
@@ -16,6 +17,7 @@ script = ExtResource("3_5ru4j")
 rich_text_label = NodePath("MarginsContainer/Layout/RichTextLabel")
 line_edit = NodePath("MarginsContainer/Layout/HBoxContainer/LineEdit")
 button = NodePath("MarginsContainer/Layout/HBoxContainer/Button")
+suggestion_box = NodePath("SuggestionBox")
 
 [node name="Background" type="Panel" parent="."]
 anchors_preset = 15
@@ -60,3 +62,5 @@ caret_blink_interval = 0.15
 [node name="Button" type="Button" parent="MarginsContainer/Layout/HBoxContainer"]
 layout_mode = 2
 text = "Submit"
+
+[node name="SuggestionBox" parent="." instance=ExtResource("3_lpb6d")]

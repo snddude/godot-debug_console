@@ -9,10 +9,12 @@ const PATH_CONVARS_FILE: String = "user://convars.file"
 @export var rich_text_label: RichTextLabel
 @export var line_edit: LineEdit
 @export var button: Button
+@export var suggestion_box: SuggestionBox
 
 var _current_history_index: int = -1
 var _can_show: bool = true
 var _command_history: Array[String] = [""]
+var _suggestions: Array[String] = []
 var _variables: Dictionary[String, Dictionary] = {}
 var _commands: Dictionary[String, Dictionary] = {}
 var _logger: DebugConsoleLogger = null
@@ -34,8 +36,14 @@ func _ready() -> void:
 	button.pressed.connect(_parse_input_text)
 	button.pressed.connect(line_edit.grab_focus)
 	line_edit.text_submitted.connect(_parse_input_text)
+	line_edit.text_changed.connect(_suggest_commands)
+	line_edit.focus_exited.connect(suggestion_box.hide)
 
-	focus_exited.connect(_hide_console)
+	suggestion_box.item_selected.connect(func(command: String):
+			line_edit.text = command + " "
+			grab_focus()
+			line_edit.set_caret_column(line_edit.text.length()))
+
 	close_requested.connect(_hide_console)
 
 	add_console_command("help", _help, TYPE_NIL)
@@ -62,6 +70,10 @@ func _input(event: InputEvent) -> void:
 func _process(_delta: float) -> void:
 	if _can_show and Input.is_action_just_pressed("toggle_debug_console"):
 		_hide_console() if visible else _show_console()
+
+	if suggestion_box.visible:
+		suggestion_box.position = position + Vector2i(line_edit.global_position)
+		suggestion_box.position.y += line_edit.size.y
 
 
 func _exit_tree() -> void:
@@ -158,6 +170,22 @@ func _save_persistent_variables() -> void:
 
 	var file := FileAccess.open(PATH_CONVARS_FILE, FileAccess.WRITE)
 	file.store_var(persistent_variables)
+
+
+func _suggest_commands(text: String) -> void:
+	_suggestions.clear()
+	suggestion_box.clear()
+
+	for command: String in _commands:
+		if command.find(text.strip_edges()) != -1:
+			_suggestions.append(command)
+			suggestion_box.add_item(command)
+
+	if _suggestions.size() < 1:
+		suggestion_box.hide()
+		return
+
+	suggestion_box.show()
 
 
 func _parse_input_text(_discard: String = "") -> void:
