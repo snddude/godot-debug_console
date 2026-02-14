@@ -21,6 +21,8 @@ func add_item(command: String) -> void:
 
 	item_container.add_child(item)
 
+	# TODO: There is a bug somewhere in here... I can almost smell it...
+
 	if item.size.x > size.x:
 		size.x = max(item.size.x, 96)
 

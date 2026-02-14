@@ -54,6 +54,7 @@ theme_override_constants/separation = 0
 [node name="LineEdit" type="LineEdit" parent="MarginsContainer/Layout/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
+focus_mode = 1
 keep_editing_on_text_submit = true
 context_menu_enabled = false
 caret_blink = true
@@ -61,6 +62,7 @@ caret_blink_interval = 0.15
 
 [node name="Button" type="Button" parent="MarginsContainer/Layout/HBoxContainer"]
 layout_mode = 2
+focus_mode = 1
 text = "Submit"
 
 [node name="SuggestionBox" parent="." instance=ExtResource("3_lpb6d")]
