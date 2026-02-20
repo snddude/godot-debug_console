@@ -40,11 +40,7 @@ func _ready() -> void:
 	line_edit.text_changed.connect(_suggest_commands)
 	line_edit.focus_exited.connect(suggestion_box.hide)
 
-	# TODO: This is not good. Put this in it's own funciton.
-	suggestion_box.item_selected.connect(func(command: String):
-			line_edit.text = command + " "
-			grab_focus()
-			line_edit.set_caret_column(line_edit.text.length()))
+	suggestion_box.item_selected.connect(_insert_suggestion)
 
 	# TODO: This doesn't work because the suggestion box is it's own window node.
 	#focus_exited.connect(_hide_console)
@@ -72,13 +68,10 @@ func _input(event: InputEvent) -> void:
 	if event.is_action_pressed("ui_down"):
 		_increment_history_index(-1)
 
-	# TODO: Maybe try making this look prettier.
-	if (event.is_action_pressed("ui_focus_next")
-			and not event.is_action_pressed("ui_focus_prev")
-			and suggestion_box.visible):
+	if event.is_action_pressed("ui_focus_next") and not event.is_action_pressed("ui_focus_prev"):
 		_increment_suggestion_index(1)
 
-	if event.is_action_pressed("ui_focus_prev") and suggestion_box.visible:
+	if event.is_action_pressed("ui_focus_prev"):
 		_increment_suggestion_index(-1)
 
 
@@ -205,6 +198,17 @@ func _suggest_commands(text: String) -> void:
 	suggestion_box.show()
 
 
+func _insert_command(command: String) -> void:
+	line_edit.text = command
+	line_edit.accept_event()
+	line_edit.set_caret_column(line_edit.text.length())
+
+
+func _insert_suggestion(suggestion: String) -> void:
+	_insert_command(suggestion + " ")
+	grab_focus()
+
+
 func _parse_input_text(_discard: String = "") -> void:
 	var input_text: String = line_edit.text
 
@@ -251,29 +255,33 @@ func _parse_input_text(_discard: String = "") -> void:
 
 	command_callable.call(argument)
 
-# TODO: The following two methods are very similar. Consider condensing them into just one.
-func _increment_history_index(ammount: int) -> void:
+
+func _increment_index(index: int, amount: int, limit: int) -> int:
+	index += amount
+	index = clamp(index, 0, limit)
+	return index
+
+
+func _increment_history_index(amount: int) -> void:
 	if _command_history.size() == 0:
 		return
 
-	_current_history_index += ammount
-	_current_history_index = clamp(_current_history_index, 0, _command_history.size() - 1)
-
-	line_edit.text = _command_history[_current_history_index]
-	line_edit.accept_event()
-	line_edit.set_caret_column(line_edit.text.length())
+	_current_history_index = _increment_index(
+			_current_history_index,
+			amount,
+			_command_history.size() - 1)
+	_insert_command(_command_history[_current_history_index])
 
 
 func _increment_suggestion_index(amount: int) -> void:
 	if _suggestions.size() == 0:
 		return
 
-	_current_suggestion_index += amount
-	_current_suggestion_index = clamp(_current_suggestion_index, 0, _suggestions.size() - 1)
-
-	line_edit.text = _suggestions[_current_suggestion_index]
-	line_edit.accept_event()
-	line_edit.set_caret_column(line_edit.text.length())
+	_current_suggestion_index = _increment_index(
+			_current_suggestion_index,
+			amount,
+			_suggestions.size() - 1)
+	_insert_command(_suggestions[_current_suggestion_index])
 
 
 func _exec(input_text: String) -> void:
