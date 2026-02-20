@@ -6,12 +6,13 @@
 [node name="SuggestionBox" type="Window" node_paths=PackedStringArray("item_container")]
 disable_3d = true
 oversampling_override = 1.0
-size = Vector2i(1, 1)
+size = Vector2i(96, 1)
 exclusive = true
 unresizable = true
 borderless = true
 always_on_top = true
 unfocusable = true
+min_size = Vector2i(96, 0)
 theme = ExtResource("1_saig6")
 script = ExtResource("1_nnftd")
 item_container = NodePath("VBoxContainer")
