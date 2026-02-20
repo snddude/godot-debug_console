@@ -77,7 +77,7 @@ func _process(_delta: float) -> void:
 
 	if suggestion_box.visible:
 		suggestion_box.position = position + Vector2i(line_edit.global_position)
-		suggestion_box.position.y += line_edit.size.y
+		suggestion_box.position.y += line_edit.size.y - 1
 
 	if not (has_focus() or suggestion_box.is_focused()):
 		_hide_console()
