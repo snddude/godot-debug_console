@@ -265,6 +265,9 @@ func _increment_history_index(amount: int) -> void:
 	if _command_history.size() == 0:
 		return
 
+	if suggestion_box.visible:
+		suggestion_box.hide()
+
 	_current_history_index = _increment_index(
 			_current_history_index,
 			amount,
