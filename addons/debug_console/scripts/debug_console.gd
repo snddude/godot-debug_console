@@ -40,13 +40,9 @@ func _ready() -> void:
 	line_edit.text_changed.connect(_suggest_commands)
 	line_edit.focus_exited.connect(suggestion_box.hide)
 
-	suggestion_box.item_selected.connect(_insert_suggestion)
-
-	# TODO: This doesn't work because the suggestion box is it's own window node.
-	#focus_exited.connect(_hide_console)
-	# TODO: Think of another way to track console focus and hide it upon it's loss.
-
 	close_requested.connect(_hide_console)
+
+	suggestion_box.item_selected.connect(_insert_suggestion)
 
 	add_console_command("help", _help, TYPE_NIL)
 	add_console_command("exec", _exec, TYPE_STRING)
@@ -82,6 +78,9 @@ func _process(_delta: float) -> void:
 	if suggestion_box.visible:
 		suggestion_box.position = position + Vector2i(line_edit.global_position)
 		suggestion_box.position.y += line_edit.size.y
+
+	if not (has_focus() or suggestion_box.is_focused()):
+		_hide_console()
 
 
 func _exit_tree() -> void:

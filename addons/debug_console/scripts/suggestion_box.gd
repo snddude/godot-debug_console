@@ -39,3 +39,13 @@ func clear() -> void:
 
 func get_item_count() -> int:
 	return item_container.get_child_count()
+
+
+func is_focused() -> bool:
+	var res: bool = false
+
+	for child: Button in item_container.get_children():
+		if child.has_focus():
+			res = true
+
+	return res
