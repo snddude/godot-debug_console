@@ -4,7 +4,6 @@ extends Window
 signal item_selected(command: String)
 
 const MAX_ITEM_COUNT: int = 9
-const BULLSHIT: int = 93
 
 @export_group("Nodes")
 @export var item_container: VBoxContainer
@@ -15,6 +14,7 @@ var max_item_count_reached: bool = false
 
 func _ready() -> void:
 	hide()
+
 	item_container.child_entered_tree.connect(_change_width)
 
 
@@ -66,8 +66,9 @@ func _change_width(node: Button) -> void:
 	var target_width: int = size.x
 	var max_width: int = DebugConsole.line_edit.size.x
 
-	# TODO: Find out why the item_container children are too wide on instantion.
-	node.size.x -= BULLSHIT
+	# This makes sure that item_container children are only as wide as they need to be.
+	# TODO: Figure out why the item_container children are too wide on instantion.
+	node.size.x -= node.size.x
 
 	if node.size.x > size.x:
 		target_width = min(node.size.x, max_width)
