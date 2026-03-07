@@ -8,8 +8,8 @@ const MAX_ITEM_COUNT: int = 9
 @export_group("Nodes")
 @export var item_container: VBoxContainer
 
-var item_count: int = 0
-var max_item_count_reached: bool = false
+var _item_count: int = 0
+var _max_item_count_reached: bool = false
 
 
 func _ready() -> void:
@@ -19,18 +19,21 @@ func _ready() -> void:
 
 
 func add_item(command: String) -> void:
-	if max_item_count_reached:
+	if _max_item_count_reached:
 		return
 
 	var item_text: String = ""
 	var item := Button.new()
 
-	if item_count == MAX_ITEM_COUNT:
+	if _item_count == MAX_ITEM_COUNT:
 		item_text = "..."
 		item.disabled = true
-		max_item_count_reached = true
+		item.mouse_default_cursor_shape = Control.CURSOR_FORBIDDEN
+		item.focus_mode = Control.FOCUS_NONE
+		_max_item_count_reached = true
 	else:
 		item_text = command
+		item.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
 		item.pressed.connect(item_selected.emit.bind(command))
 		item.pressed.connect(hide)
 
@@ -38,9 +41,9 @@ func add_item(command: String) -> void:
 	item.alignment = HORIZONTAL_ALIGNMENT_LEFT
 
 	item_container.add_child(item)
-	item_count += 1
+	_item_count += 1
 
-	size.y = item_count * 17
+	size.y = _item_count * 17
 
 
 func clear() -> void:
@@ -48,18 +51,16 @@ func clear() -> void:
 		child.queue_free()
 
 	size.x = 0
-	item_count = 0
-	max_item_count_reached = false
+	_item_count = 0
+	_max_item_count_reached = false
 
 
 func is_focused() -> bool:
-	var res: bool = false
-
 	for child: Button in item_container.get_children():
 		if child.has_focus():
-			res = true
+			return true
 
-	return res
+	return false
 
 
 func _change_width(node: Button) -> void:
