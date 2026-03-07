@@ -28,12 +28,10 @@ func add_item(command: String) -> void:
 	if _item_count == MAX_ITEM_COUNT:
 		item_text = "..."
 		item.disabled = true
-		item.mouse_default_cursor_shape = Control.CURSOR_FORBIDDEN
 		item.focus_mode = Control.FOCUS_NONE
 		_max_item_count_reached = true
 	else:
 		item_text = command
-		item.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
 		item.pressed.connect(item_selected.emit.bind(command))
 		item.pressed.connect(hide)
 
