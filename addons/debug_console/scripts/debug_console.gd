@@ -9,10 +9,13 @@ const PATH_CONVARS_FILE: String = "user://convars.file"
 @export var rich_text_label: RichTextLabel
 @export var line_edit: LineEdit
 @export var button: Button
+@export var suggestion_box: SuggestionBox
 
 var _current_history_index: int = -1
+var _current_suggestion_index: int = -1
 var _can_show: bool = true
 var _command_history: Array[String] = [""]
+var _suggestions: Array[String] = []
 var _variables: Dictionary[String, Dictionary] = {}
 var _commands: Dictionary[String, Dictionary] = {}
 var _logger: DebugConsoleLogger = null
@@ -34,9 +37,12 @@ func _ready() -> void:
 	button.pressed.connect(_parse_input_text)
 	button.pressed.connect(line_edit.grab_focus)
 	line_edit.text_submitted.connect(_parse_input_text)
+	line_edit.text_changed.connect(_suggest_commands)
+	line_edit.focus_exited.connect(suggestion_box.hide)
 
-	focus_exited.connect(_hide_console)
 	close_requested.connect(_hide_console)
+
+	suggestion_box.item_selected.connect(_insert_suggestion)
 
 	add_console_command("help", _help, TYPE_NIL)
 	add_console_command("exec", _exec, TYPE_STRING)
@@ -58,10 +64,23 @@ func _input(event: InputEvent) -> void:
 	if event.is_action_pressed("ui_down"):
 		_increment_history_index(-1)
 
+	if event.is_action_pressed("ui_focus_next") and not event.is_action_pressed("ui_focus_prev"):
+		_increment_suggestion_index(1)
+
+	if event.is_action_pressed("ui_focus_prev"):
+		_increment_suggestion_index(-1)
+
 
 func _process(_delta: float) -> void:
 	if _can_show and Input.is_action_just_pressed("toggle_debug_console"):
 		_hide_console() if visible else _show_console()
+
+	if suggestion_box.visible:
+		suggestion_box.position = position + Vector2i(line_edit.global_position)
+		suggestion_box.position.y += line_edit.size.y - 1
+
+	if not (has_focus() or suggestion_box.is_focused()):
+		_hide_console()
 
 
 func _exit_tree() -> void:
@@ -160,6 +179,35 @@ func _save_persistent_variables() -> void:
 	file.store_var(persistent_variables)
 
 
+func _suggest_commands(text: String) -> void:
+	_current_suggestion_index = -1
+
+	_suggestions.clear()
+	suggestion_box.clear()
+
+	for command: String in _commands:
+		if command.find(text.strip_edges()) != -1:
+			_suggestions.append(command)
+			suggestion_box.add_item(command)
+
+	if _suggestions.size() < 1:
+		suggestion_box.hide()
+		return
+
+	suggestion_box.show()
+
+
+func _insert_command(command: String) -> void:
+	line_edit.text = command
+	line_edit.accept_event()
+	line_edit.set_caret_column(line_edit.text.length())
+
+
+func _insert_suggestion(suggestion: String) -> void:
+	_insert_command(suggestion + " ")
+	grab_focus()
+
+
 func _parse_input_text(_discard: String = "") -> void:
 	var input_text: String = line_edit.text
 
@@ -207,16 +255,35 @@ func _parse_input_text(_discard: String = "") -> void:
 	command_callable.call(argument)
 
 
-func _increment_history_index(ammount: int) -> void:
+func _increment_index(index: int, amount: int, limit: int) -> int:
+	index += amount
+	index = clamp(index, 0, limit)
+	return index
+
+
+func _increment_history_index(amount: int) -> void:
 	if _command_history.size() == 0:
 		return
 
-	_current_history_index += ammount
-	_current_history_index = clamp(_current_history_index, 0, _command_history.size() - 1)
+	if suggestion_box.visible:
+		suggestion_box.hide()
 
-	line_edit.text = _command_history[_current_history_index]
-	line_edit.accept_event()
-	line_edit.set_caret_column(line_edit.text.length())
+	_current_history_index = _increment_index(
+			_current_history_index,
+			amount,
+			_command_history.size() - 1)
+	_insert_command(_command_history[_current_history_index])
+
+
+func _increment_suggestion_index(amount: int) -> void:
+	if _suggestions.size() == 0:
+		return
+
+	_current_suggestion_index = _increment_index(
+			_current_suggestion_index,
+			amount,
+			_suggestions.size() - 1)
+	_insert_command(_suggestions[_current_suggestion_index])
 
 
 func _exec(input_text: String) -> void:

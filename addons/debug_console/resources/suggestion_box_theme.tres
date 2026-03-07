@@ -1,0 +1,45 @@
+[gd_resource type="Theme" load_steps=6 format=3 uid="uid://buejjsbs45mm6"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_nnftd"]
+content_margin_left = 6.0
+content_margin_right = 6.0
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_saig6"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_p44c8"]
+content_margin_left = 6.0
+content_margin_right = 6.0
+bg_color = Color(0.2509804, 0.5019608, 0.7058824, 0.5019608)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0, 0, 0, 0)
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_i6jky"]
+content_margin_left = 6.0
+content_margin_top = 0.0
+content_margin_right = 6.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_nnftd"]
+bg_color = Color(0.12156863, 0.12156863, 0.12156863, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.5019608, 0.5019608, 0.5019608, 1)
+
+[resource]
+Button/colors/font_color = Color(0.875, 0.875, 0.875, 1)
+Button/colors/font_disabled_color = Color(0.88, 0.88, 0.88, 1)
+Button/colors/font_focus_color = Color(0.88, 0.88, 0.88, 1)
+Button/colors/font_hover_color = Color(0.88, 0.88, 0.88, 1)
+Button/colors/font_hover_pressed_color = Color(0.88, 0.88, 0.88, 1)
+Button/colors/font_pressed_color = Color(0.88, 0.88, 0.88, 1)
+Button/font_sizes/font_size = 12
+Button/styles/disabled = SubResource("StyleBoxEmpty_nnftd")
+Button/styles/focus = SubResource("StyleBoxEmpty_saig6")
+Button/styles/hover = SubResource("StyleBoxFlat_p44c8")
+Button/styles/normal = SubResource("StyleBoxEmpty_i6jky")
+Button/styles/pressed = SubResource("StyleBoxFlat_p44c8")
+Panel/styles/panel = SubResource("StyleBoxFlat_nnftd")

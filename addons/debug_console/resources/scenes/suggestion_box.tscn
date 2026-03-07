@@ -1,0 +1,33 @@
+[gd_scene load_steps=3 format=3 uid="uid://nps8xk4qwtt7"]
+
+[ext_resource type="Script" uid="uid://dxdv58ab7s8lj" path="res://addons/debug_console/scripts/suggestion_box.gd" id="1_nnftd"]
+[ext_resource type="Theme" uid="uid://buejjsbs45mm6" path="res://addons/debug_console/resources/suggestion_box_theme.tres" id="1_saig6"]
+
+[node name="SuggestionBox" type="Window" node_paths=PackedStringArray("item_container")]
+disable_3d = true
+oversampling_override = 1.0
+size = Vector2i(96, 1)
+exclusive = true
+unresizable = true
+borderless = true
+always_on_top = true
+unfocusable = true
+min_size = Vector2i(96, 0)
+theme = ExtResource("1_saig6")
+script = ExtResource("1_nnftd")
+item_container = NodePath("VBoxContainer")
+
+[node name="Panel" type="Panel" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 0
