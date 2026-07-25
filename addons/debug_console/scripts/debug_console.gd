@@ -351,7 +351,8 @@ class DebugConsoleLogger extends Logger:
 			rationale: String,
 			editor_notify: bool,
 			error_type: int,
-			script_backtraces: Array[ScriptBacktrace]) -> void:
+			script_backtraces: Array[ScriptBacktrace]
+	) -> void:
 		var text: String = _get_timestamp()
 
 		match error_type:
