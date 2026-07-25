@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=3 uid="uid://bh31wbnlco67n"]
+[gd_scene format=3 uid="uid://bh31wbnlco67n"]
 
 [sub_resource type="GDScript" id="GDScript_0ream"]
 resource_name = "testing"
@@ -166,12 +166,12 @@ _data = {
 &"spin": SubResource("Animation_0ream")
 }
 
-[node name="Testing" type="Node"]
+[node name="Testing" type="Node" unique_id=901993994]
 script = SubResource("GDScript_0ream")
 
-[node name="Debug" type="CanvasLayer" parent="."]
+[node name="Debug" type="CanvasLayer" parent="." unique_id=766878630]
 
-[node name="Control" type="Control" parent="Debug"]
+[node name="Control" type="Control" parent="Debug" unique_id=1913312242]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -180,7 +180,7 @@ grow_horizontal = 2
 grow_vertical = 2
 theme = SubResource("Theme_v3hh1")
 
-[node name="FPSLabel" type="Label" parent="Debug/Control"]
+[node name="FPSLabel" type="Label" parent="Debug/Control" unique_id=1040759424]
 layout_mode = 1
 anchors_preset = 2
 anchor_top = 1.0
@@ -193,27 +193,25 @@ grow_vertical = 0
 text = "0 FPS"
 script = SubResource("GDScript_ediug")
 
-[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=1544304417]
 transform = Transform3D(-0.866023, -0.433016, 0.250001, 0, 0.499998, 0.866027, -0.500003, 0.749999, -0.43301, 0, 0, 0)
 shadow_enabled = true
 
-[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=2046221936]
 environment = SubResource("Environment_0ream")
 
-[node name="Camera3D" type="Camera3D" parent="."]
+[node name="Camera3D" type="Camera3D" parent="." unique_id=2098702558]
 transform = Transform3D(1, 0, 0, 0, 0.819152, 0.573576, 0, -0.573576, 0.819152, 0, 2, 3)
 script = SubResource("GDScript_v3hh1")
 
-[node name="AnimatableBody3D" type="AnimatableBody3D" parent="."]
+[node name="AnimatableBody3D" type="AnimatableBody3D" parent="." unique_id=2050589576]
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="AnimatableBody3D"]
+[node name="MeshInstance3D" type="MeshInstance3D" parent="AnimatableBody3D" unique_id=2023445933]
 mesh = SubResource("BoxMesh_ediug")
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="AnimatableBody3D"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="AnimatableBody3D" unique_id=451336621]
 shape = SubResource("BoxShape3D_v3hh1")
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="AnimatableBody3D"]
-libraries = {
-&"": SubResource("AnimationLibrary_b0bm8")
-}
-autoplay = "spin"
+[node name="AnimationPlayer" type="AnimationPlayer" parent="AnimatableBody3D" unique_id=1988091207]
+libraries/ = SubResource("AnimationLibrary_b0bm8")
+autoplay = &"spin"

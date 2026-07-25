@@ -12,12 +12,12 @@ config_version=5
 
 config/name="godot-debug_console"
 run/main_scene="uid://bh31wbnlco67n"
-config/features=PackedStringArray("4.5", "Forward Plus")
+config/features=PackedStringArray("4.7", "Forward Plus")
 config/icon="uid://djs4kpgpdtjlp"
 
 [autoload]
 
-DebugConsole="*res://addons/debug_console/resources/scenes/autoload/debug_console.tscn"
+DebugConsole="*uid://cptj8gk2xleig"
 
 [display]
 
