@@ -8,7 +8,10 @@ A debug console for Godot. Once partly inspired by [jitspoe's godot-console](htt
 
 ## Installation
 
-Download the [latest release](https://github.com/snddude/godot-debug_console/releases/latest) of this plugin, which comes in a ZIP archive. Extract it into your project's "addons/" folder, then go to Project → Project Settings → Plugins and enable "Debug Console".
+The following plugins need to be present in your project:
+- [godot-plugin_utils](https://github.com/snddude/godot-plugin_utils)
+
+After adding all the necessary dependencies to your project, download the [latest release](https://github.com/snddude/godot-debug_console/releases/latest) of this plugin, which comes in a ZIP archive. Extract it into your project's "addons/" folder, then go to Project → Project Settings → Plugins and enable "Debug Console".
 
 ## Usage
 
@@ -25,9 +28,6 @@ DebugConsole.push_text(
         text: String  # Text you wish to print to the console.
 )
 ```
-
-> [!NOTE]
-> All text printed with this method has a new line character inserted at the end.
 
 ### Variables
 

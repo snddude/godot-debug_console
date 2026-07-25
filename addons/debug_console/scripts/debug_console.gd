@@ -176,7 +176,8 @@ func _save_persistent_variables() -> void:
 			persistent_variables[key] = _variables[key]
 
 	var file := FileAccess.open(PATH_CONVARS_FILE, FileAccess.WRITE)
-	file.store_var(persistent_variables)
+	if file:
+		file.store_var(persistent_variables)
 
 
 func _suggest_commands(text: String) -> void:
@@ -351,7 +352,8 @@ class DebugConsoleLogger extends Logger:
 			rationale: String,
 			editor_notify: bool,
 			error_type: int,
-			script_backtraces: Array[ScriptBacktrace]) -> void:
+			script_backtraces: Array[ScriptBacktrace]
+	) -> void:
 		var text: String = _get_timestamp()
 
 		match error_type:

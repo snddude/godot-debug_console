@@ -63,7 +63,11 @@ func is_focused() -> bool:
 
 func _change_width(node: Button) -> void:
 	var target_width: int = size.x
-	var max_width: int = DebugConsole.line_edit.size.x
+	# Despite the line edit node and the suggestion box window width being the
+	# same, they are somehow misaligned by 1 pixel.
+	# Might be something to do with how the line edit's width is measured in
+	# characters(?) while the window node's is in pixels?
+	var max_width: int = DebugConsole.line_edit.size.x + 1
 
 	# This makes sure that item_container children are only as wide as they need to be.
 	# TODO: Figure out why the item_container children are too wide on instantion.

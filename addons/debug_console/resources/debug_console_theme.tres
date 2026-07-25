@@ -1,4 +1,4 @@
-[gd_resource type="Theme" load_steps=17 format=3 uid="uid://byac21itgdgs7"]
+[gd_resource type="Theme" format=3 uid="uid://byac21itgdgs7"]
 
 [ext_resource type="Texture2D" uid="uid://crmql7kn5ebvf" path="res://addons/debug_console/assets/sprites/icons/close.svg" id="1_i7cus"]
 [ext_resource type="Texture2D" uid="uid://bda75qa4sqwri" path="res://addons/debug_console/assets/sprites/icons/close_hl.svg" id="2_8yw4t"]
